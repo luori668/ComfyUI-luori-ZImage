@@ -568,5 +568,5 @@ NODE_CLASS_MAPPINGS = {
 }
 
 NODE_DISPLAY_NAME_MAPPINGS = {
-    "ZImagePromptGeneratorNode": "✨ Z-image-落日-提示词生成器（支持NSFW）",
+    "ZImagePromptGeneratorNode": "✨ Z-image-落日-提示词生成器",
 }
