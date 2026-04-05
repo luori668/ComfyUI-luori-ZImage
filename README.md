@@ -2,15 +2,12 @@
 
 一个专为 **Z-Image**（造相 / Z-Image Turbo）模型优化的 ComfyUI 自定义节点插件。
 
-让 Z-Image 在 ComfyUI 中使用更方便、更强大，支持更好的提示词处理、采样控制、LoRA 加载等功能。
+让 Z-Image 在 ComfyUI 中使用更方便、更强大，支持更好的提示词处理。
 
 ## ✨ 主要功能
 
 - 支持 Z-Image Turbo 快速生成
-- 优化后的提示词处理节点（兼容 Qwen3-4B chat template）
-- 便捷的 LoRA 加载与权重控制
-- 专用采样节点（支持低显存优化）
-- 工作流模板（example_workflows 文件夹）
+- 优化后的提示词处理节点
 
 ## 📦 安装方法
 
