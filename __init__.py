@@ -574,13 +574,13 @@ class ZImagePromptLoaderNode:
                 "文件路径": ("STRING", {"default": "prompt_library.json", "multiline": False}),
                 
                 # 你的7个独立分类开关
-                "古装开关": ("BOOLEAN", {"default": False, "label": "古装"}),
-                "古风开关": ("BOOLEAN", {"default": False, "label": "古风"}),
-                "艺术摄影开关": ("BOOLEAN", {"default": False, "label": "艺术摄影"}),
-                "cos开关": ("BOOLEAN", {"default": False, "label": "cos"}),
-                "糖水少女开关": ("BOOLEAN", {"default": False, "label": "糖水少女"}),
-                "NSFW开关": ("BOOLEAN", {"default": False, "label": "NSFW"}),
-                "抽卡开关": ("BOOLEAN", {"default": False, "label": "抽卡"}),
+                "古装": ("BOOLEAN", {"default": False, "label": "古装"}),
+                "古风": ("BOOLEAN", {"default": False, "label": "古风"}),
+                "艺术摄影": ("BOOLEAN", {"default": False, "label": "艺术摄影"}),
+                "cos": ("BOOLEAN", {"default": False, "label": "cos"}),
+                "糖水少女": ("BOOLEAN", {"default": False, "label": "糖水少女"}),
+                "NSFW": ("BOOLEAN", {"default": False, "label": "NSFW"}),
+                "抽卡": ("BOOLEAN", {"default": False, "label": "抽卡"}),
                 
                 "随机模式": ("BOOLEAN", {"default": True, "label": "随机模式（忽略开关，从全部抽取）"}),
                 "seed": ("INT", {"default": 0, "min": 0, "max": 0xffffffffffffffff}),
@@ -592,8 +592,8 @@ class ZImagePromptLoaderNode:
     FUNCTION = "load_prompt"
     OUTPUT_NODE = True
 
-    def load_prompt(self, 文件路径, 古装开关, 古风开关, 艺术摄影开关, cos开关, 
-                    糖水少女开关, NSFW开关, 抽卡开关, 随机模式, seed):
+    def load_prompt(self, 文件路径, 古装, 古风, 艺术摄影, cos, 
+                    糖水少女, NSFW, 抽卡, 随机模式, seed):
         random.seed(seed)
 
         # 获取插件所在目录（和 __init__.py 同文件夹）
@@ -619,19 +619,19 @@ class ZImagePromptLoaderNode:
 
             # 根据开启的开关收集提示词
             selected = []
-            if 古装开关 and "古装" in data:
+            if 古装 and "古装" in data:
                 selected.extend(data["古装"])
-            if 古风开关 and "古风" in data:
+            if 古风 and "古风" in data:
                 selected.extend(data["古风"])
-            if 艺术摄影开关 and "艺术摄影" in data:
+            if 艺术摄影 and "艺术摄影" in data:
                 selected.extend(data["艺术摄影"])
-            if cos开关 and "cos" in data:
+            if cos and "cos" in data:
                 selected.extend(data["cos"])
-            if 糖水少女开关 and "糖水少女" in data:
+            if 糖水少女 and "糖水少女" in data:
                 selected.extend(data["糖水少女"])
-            if NSFW开关 and "NSFW" in data:
+            if NSFW and "NSFW" in data:
                 selected.extend(data["NSFW"])
-            if 抽卡开关 and "抽卡" in data:
+            if 抽卡 and "抽卡" in data:
                 selected.extend(data["抽卡"])
 
             if selected:
