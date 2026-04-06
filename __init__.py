@@ -563,10 +563,95 @@ class ZImagePromptGeneratorNode:
         return prompt
 
 
+class ZImagePromptLoaderNode:
+    """Z-image-落日-提示词调用节点 - 从插件同目录加载JSON提示词"""
+    CATEGORY = "prompt_generators"
+
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "文件路径": ("STRING", {"default": "prompt_library.json", "multiline": False}),
+                
+                # 你的7个独立分类开关
+                "古装开关": ("BOOLEAN", {"default": False, "label": "古装"}),
+                "古风开关": ("BOOLEAN", {"default": False, "label": "古风"}),
+                "艺术摄影开关": ("BOOLEAN", {"default": False, "label": "艺术摄影"}),
+                "cos开关": ("BOOLEAN", {"default": False, "label": "cos"}),
+                "糖水少女开关": ("BOOLEAN", {"default": False, "label": "糖水少女"}),
+                "NSFW开关": ("BOOLEAN", {"default": False, "label": "NSFW"}),
+                "抽卡开关": ("BOOLEAN", {"default": False, "label": "抽卡"}),
+                
+                "随机模式": ("BOOLEAN", {"default": True, "label": "随机模式（忽略开关，从全部抽取）"}),
+                "seed": ("INT", {"default": 0, "min": 0, "max": 0xffffffffffffffff}),
+            }
+        }
+
+    RETURN_TYPES = ("STRING",)
+    RETURN_NAMES = ("prompt",)
+    FUNCTION = "load_prompt"
+    OUTPUT_NODE = True
+
+    def load_prompt(self, 文件路径, 古装开关, 古风开关, 艺术摄影开关, cos开关, 
+                    糖水少女开关, NSFW开关, 抽卡开关, 随机模式, seed):
+        random.seed(seed)
+
+        # 获取插件所在目录（和 __init__.py 同文件夹）
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        full_path = os.path.join(current_dir, 文件路径)
+
+        if not os.path.exists(full_path):
+            return (f"文件不存在！请把 prompt_library.json 放到插件目录下。\n路径: {full_path}",)
+
+        try:
+            with open(full_path, 'r', encoding='utf-8') as f:
+                data = json.load(f)
+
+            # 随机模式：从所有分类合并后随机抽取
+            if 随机模式:
+                all_prompts = []
+                for lst in data.values():
+                    if isinstance(lst, list):
+                        all_prompts.extend(lst)
+                if all_prompts:
+                    return (random.choice(all_prompts),)
+                return ("JSON中没有提示词",)
+
+            # 根据开启的开关收集提示词
+            selected = []
+            if 古装开关 and "古装" in data:
+                selected.extend(data["古装"])
+            if 古风开关 and "古风" in data:
+                selected.extend(data["古风"])
+            if 艺术摄影开关 and "艺术摄影" in data:
+                selected.extend(data["艺术摄影"])
+            if cos开关 and "cos" in data:
+                selected.extend(data["cos"])
+            if 糖水少女开关 and "糖水少女" in data:
+                selected.extend(data["糖水少女"])
+            if NSFW开关 and "NSFW" in data:
+                selected.extend(data["NSFW"])
+            if 抽卡开关 and "抽卡" in data:
+                selected.extend(data["抽卡"])
+
+            if selected:
+                return (random.choice(selected),)
+            else:
+                return ("请至少开启一个分类开关，或打开随机模式",)
+
+        except json.JSONDecodeError:
+            return ("JSON格式错误，请检查 prompt_library.json 文件",)
+        except Exception as e:
+            return (f"读取失败: {str(e)}",)
+
+
+
 NODE_CLASS_MAPPINGS = {
     "ZImagePromptGeneratorNode": ZImagePromptGeneratorNode,
+    "ZImagePromptLoaderNode": ZImagePromptLoaderNode,      
 }
 
 NODE_DISPLAY_NAME_MAPPINGS = {
     "ZImagePromptGeneratorNode": "✨ Z-image-落日-提示词生成器",
+    "ZImagePromptLoaderNode": "✨ Z-image-落日-提示词抽取器",   
 }
