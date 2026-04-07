@@ -12,6 +12,9 @@
 - 优化后的提示词处理节点
 - 新增抽取器，新增词库
 - 优化逻辑性
+-<img width="2118" height="1022" alt="image" src="https://github.com/user-attachments/assets/62d2ce5c-a486-4ea5-97bd-fdf4435fbc27" />
+
+ 
 ## 📦 安装方法
 
 ### 方法一：使用 ComfyUI Manager（推荐）
