@@ -26,3 +26,4 @@ cd ComfyUI/custom_nodes
 git clone https://github.com/piaoling44/ComfyUI-luori-ZImage.git
 cd ComfyUI-luori-ZImage
 pip install -r requirements.txt
+<img width="2118" height="1022" alt="image" src="https://github.com/user-attachments/assets/6dc1cbb0-bb54-4abe-8da3-e179d0e28c7f" />
