@@ -12,8 +12,7 @@
 - 优化后的提示词处理节点
 - 新增抽取器，新增词库
 - 优化逻辑性
--使用方法，ComfyUI画布内，双击搜索【落日】即可出现此节点。
-- 
+ 
 <img width="2118" height="1022" alt="image" src="https://github.com/user-attachments/assets/62d2ce5c-a486-4ea5-97bd-fdf4435fbc27" />
 
  
