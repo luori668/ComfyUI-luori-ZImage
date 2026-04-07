@@ -13,9 +13,6 @@
 - 新增抽取器，新增词库
 - 优化逻辑性
  
-<img width="2118" height="1022" alt="image" src="https://github.com/user-attachments/assets/62d2ce5c-a486-4ea5-97bd-fdf4435fbc27" />
-
- 
 ## 📦 安装方法
 
 ### 方法一：使用 ComfyUI Manager（推荐）
@@ -23,6 +20,7 @@
 2. 点击 **Install Custom Nodes**
 3. 搜索 `luori-ZImage` 或 `ComfyUI-luori-ZImage`
 4. 安装后重启 ComfyUI
+5. <img width="2118" height="1022" alt="image" src="https://github.com/user-attachments/assets/62d2ce5c-a486-4ea5-97bd-fdf4435fbc27" />
 
 ### 方法二：手动安装
 ```bash
