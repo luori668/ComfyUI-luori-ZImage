@@ -320,7 +320,7 @@ class ZImagePromptGeneratorNode:
         atmosphere = nsfw_atmosphere + coherent["氛围"] if nsfw else coherent["氛围"]
 
         lens = get_random_item("拍摄参数", "镜头")
-        safe_compositions = ["中心构图", "三分法构图", "对称构图", "留白构图", "对角线构图", "三角形构图", "S形构图", "黄金分割", "螺旋构图", "并列构图"]
+        safe_compositions = ["中心构图", "三分法构图", "对称构图", "留白构图", "对角线构图", "三角形构图", "S形构图", "黄金分割", "螺旋构图"]
         composition = get_random_item("构图光影", "构图") if enable_foreground else random.choice(safe_compositions)
         safe_depths = ["浅景深", "大光圈虚化", "中等景深", "奶油般化开", "光斑效果", "焦外成像"]
         depth = get_random_item("构图光影", "景深") if enable_foreground else random.choice(safe_depths)
