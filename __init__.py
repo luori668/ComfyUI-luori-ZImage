@@ -143,10 +143,7 @@ class ZImagePromptGeneratorNode:
 
     @classmethod
     def INPUT_TYPES(cls):
-        # 年龄选项（16-38岁 + 无）
         age_options = ["无"] + [f"{i}岁" for i in range(16, 39)]
-        
-        # 身材选项（多个常用描述 + 无）
         body_options = ["无", "苗条修长", "S型火辣曲线", "丰满坚挺", "纤细腰肢蜜桃臀", "高挑匀称", "肉感丰腴", "骨感模特身材", "舞蹈生紧致身材", "健身型健康曲线"]
 
         return {
@@ -166,7 +163,9 @@ class ZImagePromptGeneratorNode:
                 "人物数量关系": (libraries["人物设定"]["类型"], {"default": "单人"}),
                 "景别": (libraries["景别"]["类型"], {"default": "半身照"}),
 
-                # 可选项（自主选择）
+                # ========== 新增：背包选项（默认无，不会输出描述） ==========
+                "背包": (["无", "双肩背包", "单肩斜挎包", "链条小方包", "手提包", "托特包", "邮差包", "透明背包", "皮质双肩包", "帆布背包", "迷你背包", "大容量背包", "时尚书包", "旅行背包", "学生书包"], {"default": "无"}),
+
                 "年龄": (age_options, {"default": "无"}),
                 "身材": (body_options, {"default": "无"}),
 
@@ -195,9 +194,9 @@ class ZImagePromptGeneratorNode:
         seed = kwargs.get("seed", 0)
         random.seed(seed)
 
-        # 获取可选项
         selected_age = kwargs.get("年龄", "无")
         selected_body = kwargs.get("身材", "无")
+        backpack = kwargs.get("背包", "无")
         nsfw = kwargs.get("NSFW", False)
 
         style_theme = kwargs.get("风格主题", "随机")
@@ -256,7 +255,7 @@ class ZImagePromptGeneratorNode:
             style, type_val, detail_level, gender_type, race_choice, contact_lens_choice,
             background, stocking, headwear, shoes, sexy_clothing, figure_setting, framing,
             include_pose, include_details, include_quality, include_suffix,
-            enable_foreground, fanciful, whimsical, coherent, nsfw, selected_age, selected_body
+            enable_foreground, fanciful, whimsical, coherent, nsfw, selected_age, selected_body, backpack
         )
 
         prompt_input = kwargs.get("prompt_input", "")
@@ -269,12 +268,11 @@ class ZImagePromptGeneratorNode:
                          contact_lens_choice, background, stocking, headwear, shoes,
                          sexy_clothing, figure_setting, framing, include_pose, include_details,
                          include_quality, include_suffix, enable_foreground, fanciful, whimsical,
-                         coherent, nsfw=False, selected_age="无", selected_body="无"):
+                         coherent, nsfw=False, selected_age="无", selected_body="无", backpack="无"):
 
         if gender_type in ["风景", "插画", "动物", "建筑", "抽象艺术"]:
             return self._generate_special_prompt(style, type_val, detail_level, background, gender_type, figure_setting, enable_foreground, fanciful, whimsical, framing)
 
-        # NSFW 增强（极致露骨）
         nsfw_body = ""
         nsfw_pose = ""
         nsfw_atmosphere = ""
@@ -290,7 +288,6 @@ class ZImagePromptGeneratorNode:
             if stocking == "无":
                 stocking = random.choice([s for s in libraries["丝袜类型"]["丝袜种类"] if s != "无" and s != "随机"])
 
-        # 年龄和身材处理（可选项）
         age_str = f"{selected_age}的" if selected_age != "无" else ""
         body_str = f"{selected_body}，" if selected_body != "无" else ""
 
@@ -305,11 +302,7 @@ class ZImagePromptGeneratorNode:
         if type_val == "古装":
             clothing_type = get_random_item("服装造型", "古装")
         else:
-            clothing_type = random.choice([
-                get_random_item("服装造型", "上衣"),
-                get_random_item("服装造型", "连衣裙"),
-                get_random_item("服装造型", "制服校服")
-            ])
+            clothing_type = random.choice([get_random_item("服装造型", "上衣"), get_random_item("服装造型", "连衣裙"), get_random_item("服装造型", "制服校服")])
         material = get_random_item("服装造型", "材质")
         color = get_random_item("服装造型", "颜色")
         accessory = get_random_item("服装造型", "配饰")
@@ -373,6 +366,10 @@ class ZImagePromptGeneratorNode:
         if shoes and shoes != "无":
             prompt_parts.append(f"脚穿{shoes}，")
 
+        # ========== 背包处理（默认无，不会输出描述） ==========
+        if backpack and backpack != "无":
+            prompt_parts.append(f"背着{backpack}，")
+
         if pose:
             prompt_parts.append(f"以{pose}的姿态，{hand_action}，表情{expression}，{eyes}。")
         else:
@@ -382,7 +379,6 @@ class ZImagePromptGeneratorNode:
         prompt_parts.append(f"采用{composition}，景深为{depth}。画面色调为{tone}，{color_style}。")
         prompt_parts.append(f"光线来自{light_type}，形成{light_effect}效果。")
 
-        # 高级细节、创意、画质参数、后缀等保持你原来逻辑
         extra_details = []
         if include_details:
             extra_details.append(f"中景聚焦模特，背景虚化为柔和光斑。")
@@ -419,7 +415,6 @@ class ZImagePromptGeneratorNode:
 
         final_prompt = "".join(prompt_parts)
 
-        # 字数控制（保留原有）
         target_chars = None
         if detail_level == "简洁级": target_chars = 200
         elif detail_level == "普通级": target_chars = 250
@@ -477,7 +472,6 @@ class ZImagePromptGeneratorNode:
         return prompt
 
 
-# ====================== 抽取器节点（完全不修改）======================
 class ZImagePromptLoaderNode:
     """Z-image-落日-提示词调用节点 - 从插件同目录加载JSON提示词"""
     CATEGORY = "prompt_generators"
