@@ -163,9 +163,6 @@ class ZImagePromptGeneratorNode:
                 "人物数量关系": (libraries["人物设定"]["类型"], {"default": "单人"}),
                 "景别": (libraries["景别"]["类型"], {"default": "半身照"}),
 
-                # ========== 新增：背包选项（默认无，不会输出描述） ==========
-                "背包": (["无", "双肩背包", "单肩斜挎包", "链条小方包", "手提包", "托特包", "邮差包", "透明背包", "皮质双肩包", "帆布背包", "迷你背包", "大容量背包", "时尚书包", "旅行背包", "学生书包"], {"default": "无"}),
-
                 "年龄": (age_options, {"default": "无"}),
                 "身材": (body_options, {"default": "无"}),
 
@@ -196,7 +193,6 @@ class ZImagePromptGeneratorNode:
 
         selected_age = kwargs.get("年龄", "无")
         selected_body = kwargs.get("身材", "无")
-        backpack = kwargs.get("背包", "无")
         nsfw = kwargs.get("NSFW", False)
 
         style_theme = kwargs.get("风格主题", "随机")
@@ -255,7 +251,7 @@ class ZImagePromptGeneratorNode:
             style, type_val, detail_level, gender_type, race_choice, contact_lens_choice,
             background, stocking, headwear, shoes, sexy_clothing, figure_setting, framing,
             include_pose, include_details, include_quality, include_suffix,
-            enable_foreground, fanciful, whimsical, coherent, nsfw, selected_age, selected_body, backpack
+            enable_foreground, fanciful, whimsical, coherent, nsfw, selected_age, selected_body
         )
 
         prompt_input = kwargs.get("prompt_input", "")
@@ -268,7 +264,7 @@ class ZImagePromptGeneratorNode:
                          contact_lens_choice, background, stocking, headwear, shoes,
                          sexy_clothing, figure_setting, framing, include_pose, include_details,
                          include_quality, include_suffix, enable_foreground, fanciful, whimsical,
-                         coherent, nsfw=False, selected_age="无", selected_body="无", backpack="无"):
+                         coherent, nsfw=False, selected_age="无", selected_body="无"):
 
         if gender_type in ["风景", "插画", "动物", "建筑", "抽象艺术"]:
             return self._generate_special_prompt(style, type_val, detail_level, background, gender_type, figure_setting, enable_foreground, fanciful, whimsical, framing)
@@ -365,10 +361,6 @@ class ZImagePromptGeneratorNode:
             prompt_parts.append(f"佩戴{accessory}，")
         if shoes and shoes != "无":
             prompt_parts.append(f"脚穿{shoes}，")
-
-        # ========== 背包处理（默认无，不会输出描述） ==========
-        if backpack and backpack != "无":
-            prompt_parts.append(f"背着{backpack}，")
 
         if pose:
             prompt_parts.append(f"以{pose}的姿态，{hand_action}，表情{expression}，{eyes}。")
@@ -537,12 +529,71 @@ class ZImagePromptLoaderNode:
             return (f"读取失败: {str(e)}",)
 
 
+class ZImageNSFWNode:
+    """Z-image-落日-NSFW测试版 - 只输出极致NSFW内容"""
+    CATEGORY = "prompt_generators"
+
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "强度": (["轻度", "中度", "重度", "极致"], {"default": "极致"}),
+                "seed": ("INT", {"default": 0, "min": 0, "max": 0xffffffffffffffff}),
+            }
+        }
+
+    RETURN_TYPES = ("STRING",)
+    RETURN_NAMES = ("prompt",)
+    FUNCTION = "generate"
+    OUTPUT_NODE = True
+
+    def generate(self, 强度, seed):
+        random.seed(seed)
+
+        nsfw_lib = {
+            "body": ["丰满坚挺的乳房", "深邃诱人乳沟", "硬挺粉嫩乳头", "肿胀湿润阴唇", "晶莹蜜液流出的蜜穴", "微微张开的粉嫩私处", "高潮喷水的蜜穴", "肿胀敏感阴蒂", "紧致收缩肛门", "全身汗湿光泽肌肤", "乳头喷奶", "阴唇肿胀流蜜", "潮红高潮私密部位", "肥美多汁阴唇", "紧致粉嫩蜜穴", "丰满翘臀", "修长美腿", "纤细腰肢", "完美S曲线", "水光肌肤"],
+            "pose": ["双腿大开M型完全暴露", "跪姿高翘臀后入式", "仰卧M型大开腿", "手指猛烈抽插蜜穴", "舌头伸出滴口水高潮脸", "潮吹喷水全身颤抖", "后入双手拉开臀瓣", "骑乘位猛烈扭腰套弄", "四肢着地狗爬式高翘臀", "双手托胸挤出深沟自慰", "高潮痉挛喷水四溅", "侧躺抬腿暴露私处", "站立弯腰翘臀", "坐在桌子上双腿大开", "床上翻滚浪叫"],
+            "action": ["手指快速抽插蜜穴", "舌头舔弄肿胀乳头", "双手用力揉捏乳房", "猛烈扭腰摩擦", "潮吹喷射液体", "浪叫呻吟不止", "身体剧烈痉挛", "蜜液四处飞溅", "自慰达到高潮", "后入猛烈撞击", "骑乘位上下猛套", "手指玩弄阴蒂", "舌头深入私处"],
+            "expression": ["高潮迷离眼神", "舌头伸出流口水", "欲仙欲死表情", "浪叫连连", "脸颊潮红", "半睁眼含情脉脉", "咬唇呻吟", "眼角泪水", "极致愉悦扭曲", "春心荡漾媚眼"],
+            "atmosphere": ["极致淫乱", "欲火焚身高潮连连", "肉欲横流", "淫靡湿热", "情欲爆炸", "欲仙欲死", "浪叫不止", "高潮痉挛", "春心荡漾", "极致色气"],
+            "clothing": ["完全脱光", "半脱蕾丝内衣", "开裆黑丝袜", "透明情趣睡裙", "绑带胸衣", "无内裤", "乳头完全暴露", "私处完全暴露", "湿透透明内裤", "撕破渔网袜", "情趣皮革束缚", "金属链条装饰"],
+            "quality": ["8K超高清", "极致细节渲染", "真实湿润光泽", "高潮潮红真实", "动态捕捉液体飞溅", "超写实肌理", "湿滑反光", "极致色气"]
+        }
+
+        # 根据强度决定词的数量
+        if 强度 == "轻度":
+            num_body = 2
+        elif 强度 == "中度":
+            num_body = 4
+        elif 强度 == "重度":
+            num_body = 7
+        else:  # 极致
+            num_body = 12
+
+        body = "，".join(random.sample(nsfw_lib["body"], min(num_body, len(nsfw_lib["body"]))))
+        pose = random.choice(nsfw_lib["pose"])
+        action = random.choice(nsfw_lib["action"])
+        expr = random.choice(nsfw_lib["expression"])
+        atm = random.choice(nsfw_lib["atmosphere"])
+        cloth = random.choice(nsfw_lib["clothing"])
+
+        prompt = f"极具魅力的年轻亚洲女性，冷白皮，{body}，{cloth}，{pose}，{action}，表情{expr}，{atm}的氛围，{random.choice(nsfw_lib['quality'])}，超写实，8K最高画质"
+
+        # 极致模式额外添加
+        if 强度 == "极致":
+            prompt += f"，{random.choice(nsfw_lib['body'])}，{random.choice(nsfw_lib['action'])}，高潮痉挛喷水，蜜液四溅，浪叫连连"
+
+        return (prompt,)
+
+
 NODE_CLASS_MAPPINGS = {
     "ZImagePromptGeneratorNode": ZImagePromptGeneratorNode,
     "ZImagePromptLoaderNode": ZImagePromptLoaderNode,
+    "ZImageNSFWNode": ZImageNSFWNode,          # 新增
 }
 
 NODE_DISPLAY_NAME_MAPPINGS = {
     "ZImagePromptGeneratorNode": "✨ Z-image-落日-提示词生成器",
     "ZImagePromptLoaderNode": "✨ Z-image-落日-提示词抽取器",
+    "ZImageNSFWNode": "🔥 Z-image-落日-NSFW测试版",   # 新增
 }
