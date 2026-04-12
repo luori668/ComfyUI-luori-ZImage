@@ -29,7 +29,8 @@ comfyUI画布内 双击搜索 落日  即可
 2. 点击 **Install Custom Nodes**
 3. 搜索 `luori-ZImage` 或 `ComfyUI-luori-ZImage`
 4. 安装后重启 ComfyUI
- <img width="2118" height="1022" alt="image" src="https://github.com/user-attachments/assets/62d2ce5c-a486-4ea5-97bd-fdf4435fbc27" />
+5. <img width="1420" height="798" alt="d17b8704aa302d445639c919da26f4c1" src="https://github.com/user-attachments/assets/4a178059-36a1-4f06-a66e-8eb96ff11971" />
+
 
 ### 方法二：手动安装
 ```bash
