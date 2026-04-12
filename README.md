@@ -29,7 +29,8 @@ comfyUI画布内 双击搜索 落日  即可
 2. 点击 **Install Custom Nodes**
 3. 搜索 `luori-ZImage` 或 `ComfyUI-luori-ZImage`
 4. 安装后重启 ComfyUI
-5. <img width="1420" height="798" alt="d17b8704aa302d445639c919da26f4c1" src="https://github.com/user-attachments/assets/4a178059-36a1-4f06-a66e-8eb96ff11971" />
+5.<img width="1240" height="713" alt="4eefaffd-4d30-4a72-9ee3-54936a4b3bd9" src="https://github.com/user-attachments/assets/d3ae58dc-5958-4f91-9723-08da7583caea" />
+
 
 
 ### 方法二：手动安装
