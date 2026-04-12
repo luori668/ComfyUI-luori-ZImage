@@ -163,6 +163,9 @@ class ZImagePromptGeneratorNode:
                 "人物数量关系": (libraries["人物设定"]["类型"], {"default": "单人"}),
                 "景别": (libraries["景别"]["类型"], {"default": "半身照"}),
 
+                # ========== 背包选项（默认无） ==========
+                "背包": (["无", "双肩背包", "单肩斜挎包", "链条小方包", "手提包", "托特包", "邮差包", "透明背包", "皮质双肩包", "帆布背包", "迷你背包", "大容量背包", "时尚书包", "旅行背包", "学生书包"], {"default": "无"}),
+
                 "年龄": (age_options, {"default": "无"}),
                 "身材": (body_options, {"default": "无"}),
 
@@ -193,6 +196,7 @@ class ZImagePromptGeneratorNode:
 
         selected_age = kwargs.get("年龄", "无")
         selected_body = kwargs.get("身材", "无")
+        backpack = kwargs.get("背包", "无")
         nsfw = kwargs.get("NSFW", False)
 
         style_theme = kwargs.get("风格主题", "随机")
@@ -251,7 +255,7 @@ class ZImagePromptGeneratorNode:
             style, type_val, detail_level, gender_type, race_choice, contact_lens_choice,
             background, stocking, headwear, shoes, sexy_clothing, figure_setting, framing,
             include_pose, include_details, include_quality, include_suffix,
-            enable_foreground, fanciful, whimsical, coherent, nsfw, selected_age, selected_body
+            enable_foreground, fanciful, whimsical, coherent, nsfw, selected_age, selected_body, backpack
         )
 
         prompt_input = kwargs.get("prompt_input", "")
@@ -264,7 +268,7 @@ class ZImagePromptGeneratorNode:
                          contact_lens_choice, background, stocking, headwear, shoes,
                          sexy_clothing, figure_setting, framing, include_pose, include_details,
                          include_quality, include_suffix, enable_foreground, fanciful, whimsical,
-                         coherent, nsfw=False, selected_age="无", selected_body="无"):
+                         coherent, nsfw=False, selected_age="无", selected_body="无", backpack="无"):
 
         if gender_type in ["风景", "插画", "动物", "建筑", "抽象艺术"]:
             return self._generate_special_prompt(style, type_val, detail_level, background, gender_type, figure_setting, enable_foreground, fanciful, whimsical, framing)
@@ -361,6 +365,10 @@ class ZImagePromptGeneratorNode:
             prompt_parts.append(f"佩戴{accessory}，")
         if shoes and shoes != "无":
             prompt_parts.append(f"脚穿{shoes}，")
+
+        # ========== 背包处理 ==========
+        if backpack and backpack != "无":
+            prompt_parts.append(f"背着{backpack}，")
 
         if pose:
             prompt_parts.append(f"以{pose}的姿态，{hand_action}，表情{expression}，{eyes}。")
@@ -529,8 +537,9 @@ class ZImagePromptLoaderNode:
             return (f"读取失败: {str(e)}",)
 
 
+# ====================== NSFW专用节点 ======================
 class ZImageNSFWNode:
-    """Z-image-落日-NSFW测试版 - 只输出极致NSFW内容"""
+    """Z-image-落日-NSFW专用提示词生成器 - 只输出极致NSFW内容"""
     CATEGORY = "prompt_generators"
 
     @classmethod
@@ -560,14 +569,13 @@ class ZImageNSFWNode:
             "quality": ["8K超高清", "极致细节渲染", "真实湿润光泽", "高潮潮红真实", "动态捕捉液体飞溅", "超写实肌理", "湿滑反光", "极致色气"]
         }
 
-        # 根据强度决定词的数量
         if 强度 == "轻度":
             num_body = 2
         elif 强度 == "中度":
             num_body = 4
         elif 强度 == "重度":
             num_body = 7
-        else:  # 极致
+        else:
             num_body = 12
 
         body = "，".join(random.sample(nsfw_lib["body"], min(num_body, len(nsfw_lib["body"]))))
@@ -579,7 +587,6 @@ class ZImageNSFWNode:
 
         prompt = f"极具魅力的年轻亚洲女性，冷白皮，{body}，{cloth}，{pose}，{action}，表情{expr}，{atm}的氛围，{random.choice(nsfw_lib['quality'])}，超写实，8K最高画质"
 
-        # 极致模式额外添加
         if 强度 == "极致":
             prompt += f"，{random.choice(nsfw_lib['body'])}，{random.choice(nsfw_lib['action'])}，高潮痉挛喷水，蜜液四溅，浪叫连连"
 
@@ -589,11 +596,11 @@ class ZImageNSFWNode:
 NODE_CLASS_MAPPINGS = {
     "ZImagePromptGeneratorNode": ZImagePromptGeneratorNode,
     "ZImagePromptLoaderNode": ZImagePromptLoaderNode,
-    "ZImageNSFWNode": ZImageNSFWNode,          # 新增
+    "ZImageNSFWNode": ZImageNSFWNode,
 }
 
 NODE_DISPLAY_NAME_MAPPINGS = {
     "ZImagePromptGeneratorNode": "✨ Z-image-落日-提示词生成器",
     "ZImagePromptLoaderNode": "✨ Z-image-落日-提示词抽取器",
-    "ZImageNSFWNode": "🔥 Z-image-落日-NSFW测试版",   # 新增
+    "ZImageNSFWNode": "🔥 Z-image-落日-NSFW专用提示词生成器",
 }
