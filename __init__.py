@@ -539,7 +539,7 @@ class ZImagePromptLoaderNode:
 
 # ====================== NSFW专用节点 ======================
 class ZImageNSFWNode:
-    """Z-image-落日-NSFW专用提示词生成器 - 只输出极致NSFW内容"""
+    """Z-image-落日-NSFW测试版 - 只输出极致NSFW内容"""
     CATEGORY = "prompt_generators"
 
     @classmethod
@@ -602,5 +602,5 @@ NODE_CLASS_MAPPINGS = {
 NODE_DISPLAY_NAME_MAPPINGS = {
     "ZImagePromptGeneratorNode": "✨ Z-image-落日-提示词生成器",
     "ZImagePromptLoaderNode": "✨ Z-image-落日-提示词抽取器",
-    "ZImageNSFWNode": "🔥 Z-image-落日-NSFW专用提示词生成器",
+    "ZImageNSFWNode": "🔥 Z-image-落日-NSFW测试版",
 }
