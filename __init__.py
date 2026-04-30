@@ -19,10 +19,9 @@ libraries = {
         "类型": ["cosplay风格", "熟女风格", "纯欲风", "青春校园风", "轻熟风", "御姐风", "甜酷风", "中性风", "复古港风", "森系风", "暗黑系", "JK制服风", "洛丽塔", "哥特风", "波西米亚", "小香风", "法式", "英伦风", "休闲日常", "职场OL", "晚宴妆", "节日主题", "泳装", "运动风", "病娇", "高冷", "温柔", "俏皮", "知性", "优雅", "嘻哈风", "街头风", "朋克风", "民族风", "田园风", "学院风", "古装"]
     },
     "模特设定": {
-        "性别年龄": ["16岁少女", "17岁高中生", "18岁少女", "19岁大学生", "20岁年轻女性", "21岁大学生", "22岁女大学生", "23岁应届生", "24岁职场新人", "25岁职场女性", "26岁轻熟女性", "27岁知性女性", "28岁轻熟女性", "29岁成熟女性", "30岁成熟女性", "31岁优雅女性", "32岁魅力女性", "33岁气质女性", "34岁知性女性", "35岁知性女性", "16岁少年", "17岁高中生", "18岁少年", "19岁大学生", "20岁年轻男性", "25岁职场男性", "30岁成熟男性", "35岁魅力男性", "40岁稳重男性", "45岁成功男性"],
-        "人种特征": ["亚洲女性", "东亚面孔", "中国女性", "日系少女", "韩系风格", "中日韩混血", "韩国女性", "日本女性", "台湾女生", "香港女生", "东南亚混血", "混血感", "欧美系亚洲面孔", "新疆美女", "藏族姑娘", "苗条型", "圆润型", "高冷型", "甜美型", "知性型"],
+        "人种特征": ["亚洲女性", "东亚面孔", "中国女性", "日系少女", "韩系风格", "中日韩混血", "韩国女性", "日本女性", "台湾女生", "香港女生", "东南亚混血", "混血感", "欧美系亚洲面孔", "新疆美女", "藏族姑娘"],
         "面部特征": ["瓜子脸", "小V脸", "圆脸", "鹅蛋脸", "方脸", "心形脸", "丹凤眼", "杏眼", "桃花眼", "狐狸眼", "下垂眼", "圆眼", "细长眼", "双眼皮", "单眼皮", "内双", "欧式大双", "高挺鼻梁", "小巧鼻子", "肉感鼻子", "精致鼻头", "饱满M形唇", "薄唇", "厚唇", "嘟嘟唇", "樱桃小嘴", "微笑唇", "酒窝", "梨涡", "苹果肌", "高颧骨", "精致下颌线", "美人尖", "一字眉", "柳叶眉", "剑眉", "野生眉", "长睫毛", "卷翘睫毛", "下睫毛明显", "卧蚕明显", "清透感", "冷白皮", "自然肤色", "暖黄皮", "小麦色", "牛奶肌", "水光肌", "零毛孔", "细腻肌肤", "光滑肤质", "透亮感", "光泽感"],
-        "发型发色": ["黑长直", "黑短发", "金发", "棕发", "红发", "粉发", "蓝发", "紫发", "银发", "灰发", "渐变发", "挑染", "挂耳染", "公主切", "齐刘海", "空气刘海", "八字刘海", "中分", "侧分", "无刘海", "长发及腰", "中长发", "齐肩发", "锁骨发", "短发", "超短发", "大波浪卷", "小卷发", "羊毛卷", "水波卷", "蛋卷头", "公主头", "高马尾", "低马尾", "双马尾", "麻花辫", "丸子头", "半扎发", "编发", "发带装饰", "蝴蝶结发饰", "发卡点缀", "发箍装饰"],
+        "发型发色": ["黑长直", "黑短发", "金发", "棕发", "红发", "粉发", "蓝发", "紫发", "银发", "灰发", "渐变发", "挑染", "公主切", "齐刘海", "空气刘海", "八字刘海", "中分", "侧分", "无刘海", "长发及腰", "中长发", "齐肩发", "锁骨发", "短发", "超短发", "大波浪卷", "小卷发", "羊毛卷", "水波卷", "蛋卷头", "公主头", "高马尾", "低马尾", "双马尾", "麻花辫", "丸子头", "半扎发", "编发", "发带装饰", "蝴蝶结发饰", "发卡点缀", "发箍装饰"],
         "身材体型": ["匀称修长", "苗条身材", "S型曲线", "纤细腰肢", "丰腴身材", "高挑", "娇小", "标准比例", "修长双腿", "紧致手臂", "直角肩", "天鹅颈", "蝴蝶骨", "美背", "纤纤细腰", "蜜桃臀", "大长腿", "小腿纤细", "脚踝精致", "骨感美", "肉感美", "健康美", "运动型", "纤细型", "丰满型", "匀称型", "模特身材", "舞蹈生身材", "运动员身材", "健身型"],
         "气质神态": ["优雅气质", "清冷感", "温柔知性", "甜美可爱", "御姐气场", "慵懒随性", "阳光开朗", "忧郁神秘", "高贵典雅", "活泼俏皮", "文艺清新", "复古摩登", "性感妩媚", "酷飒帅气", "中性帅气", "邻家女孩", "初恋感", "少女感", "成熟魅力", "知性优雅", "温柔治愈", "忧郁文艺", "高冷疏离", "甜美可人", "天真烂漫", "纯真无邪", "魅惑迷人", "气场全开", "温婉可人", "恬静淡雅"]
     },
@@ -69,7 +68,7 @@ libraries = {
     },
     "姿势动作": {
         "全身姿势": ["慵懒倚靠沙发", "坐在窗边看窗外", "站立靠墙", "躺在地毯上", "蹲在地上", "跳跃瞬间", "旋转跳舞", "漫步行走", "奔跑抓拍", "瑜伽动作", "舞蹈姿势", "运动瞬间", "伸展身体", "蜷缩身体", "俯身低头", "仰头向上", "侧身回眸", "正面直视", "背影", "坐姿优雅", "站姿挺拔", "卧姿放松", "跪姿虔诚", "趴姿慵懒"],
-        "手部动作": ["轻抚发丝", "双手抱胸", "手插口袋", "双手合十", "比心手势", "比耶手势", "OK手势", "打招呼", "挥手告别", "伸手触摸", "握拳加油", "张开双臂", "交叉双手", "整理衣领", "调整眼镜", "拿书阅读", "端茶杯", "拿手机自拍", "撑伞", "拿包", "提行李箱", "拿花束", "拿气球"],
+        "手部动作": ["轻抚发丝", "双手抱胸", "手插口袋", "双手合十", "比心手势", "比耶手势", "OK手势", "打招呼", "挥手告别", "伸手触摸", "握拳加油", "张开双臂", "交叉双手", "整理衣领", "调整眼镜", "拿书阅读", "端茶杯", "拿手机自拍", "撑伞", "拿包", "拿花束", "拿气球"],
         "面部表情": ["微笑", "大笑", "露齿笑", "抿嘴笑", "神秘微笑", "忧郁", "沉思", "惊讶", "调皮", "温柔", "高冷", "清冷", "甜美", "可爱", "俏皮", "性感", "妩媚", "诱惑", "无辜", "天真", "自信", "坚定", "迷茫", "疲惫", "放松", "专注", "出神", "期待", "满足", "幸福"],
         "眼神": ["直视镜头", "避开视线", "看向远方", "低头看地", "抬头看天", "侧目斜视", "闭眼", "半睁眼", "眯眼", "瞪大眼", "含情脉脉", "眼神凌厉", "眼神温柔", "眼神坚定", "眼神迷茫", "眼神忧郁", "眼神俏皮", "眼神诱惑", "眼神无辜", "眼神自信", "泪眼朦胧", "眼中带笑", "眼神有光", "眼神深邃", "眼神清澈"]
     },
@@ -138,7 +137,7 @@ def get_coherent_attributes(style_theme):
 
 
 class ZImagePromptGeneratorNode:
-    """Z-image-落日-提示词生成器 - ComfyUI 自定义节点"""
+    """Z-image-落日-提示词生成器 - ComfyUI 自定义节点（优化版）"""
     CATEGORY = "prompt_generators"
 
     @classmethod
@@ -152,18 +151,17 @@ class ZImagePromptGeneratorNode:
                 "拍摄风格": (libraries["拍摄主题"]["风格"] + ["随机", "无"], {"default": "随机"}),
                 "拍摄类型": (libraries["拍摄主题"]["类型"] + ["随机", "无"], {"default": "随机"}),
                 "细节级别": (["简洁级", "普通级", "详细级", "大师级", "极致级", "无"], {"default": "大师级"}),
-                "模特性别": (["女性", "男性", "风景", "插画", "动物", "建筑", "抽象艺术", "随机", "无"], {"default": "女性"}),
+                "模特性别": (["女性"], {"default": "女性"}),   # 只保留女性
                 "人种选择": (libraries["人种类型"]["人种"] + ["随机", "无"], {"default": "亚洲人"}),
                 "美瞳选择": (libraries["美瞳种类"]["美瞳"] + ["随机"], {"default": "无"}),
-                "背景选择": (libraries["背景选择"]["背景类型"], {"default": "无"}),
+                # "背景选择": 已删除
                 "丝袜类型": (libraries["丝袜类型"]["丝袜种类"], {"default": "无"}),
                 "头部配饰": (list(set([item for sublist in libraries["头部配饰"].values() for item in sublist])), {"default": "无"}),
                 "鞋子类型": (libraries["鞋子类型"]["鞋类"], {"default": "无"}),
                 "情趣衣服": (libraries["情趣服装"]["情趣衣服"], {"default": "无"}),
-                "人物数量关系": (libraries["人物设定"]["类型"], {"default": "单人"}),
+                "人物数量关系": (["单人"], {"default": "单人"}),   # 固定为单人
                 "景别": (libraries["景别"]["类型"], {"default": "半身照"}),
 
-                # ========== 背包选项（默认无） ==========
                 "背包": (["无", "双肩背包", "单肩斜挎包", "链条小方包", "手提包", "托特包", "邮差包", "透明背包", "皮质双肩包", "帆布背包", "迷你背包", "大容量背包", "时尚书包", "旅行背包", "学生书包"], {"default": "无"}),
 
                 "年龄": (age_options, {"default": "无"}),
@@ -203,15 +201,14 @@ class ZImagePromptGeneratorNode:
         style = kwargs.get("拍摄风格", "随机")
         type_val = kwargs.get("拍摄类型", "随机")
         detail_level = kwargs.get("细节级别", "大师级")
-        gender_type = kwargs.get("模特性别", "女性")
+        gender_type = "女性"  # 固定女性
         race_choice = kwargs.get("人种选择", "亚洲人")
         contact_lens_choice = kwargs.get("美瞳选择", "无")
-        background = kwargs.get("背景选择", "无")
         stocking = kwargs.get("丝袜类型", "无")
         headwear = kwargs.get("头部配饰", "无")
         shoes = kwargs.get("鞋子类型", "无")
         sexy_clothing = kwargs.get("情趣衣服", "无")
-        figure_setting = kwargs.get("人物数量关系", "单人")
+        figure_setting = "单人"  # 固定单人
         framing = kwargs.get("景别", "半身照")
         include_pose = kwargs.get("包含姿势描述", True)
         include_details = kwargs.get("包含高级细节", True)
@@ -232,28 +229,19 @@ class ZImagePromptGeneratorNode:
         type_val = resolve(type_val, "拍摄主题", "类型")
         if detail_level == "无":
             detail_level = ""
-        gender_type = resolve(gender_type, None, None)
         race_choice = resolve(race_choice, "人种类型", "人种")
         contact_lens_choice = resolve(contact_lens_choice, "美瞳种类", "美瞳")
-        background = resolve(background, "背景选择", "背景类型")
         stocking = resolve(stocking, "丝袜类型", "丝袜种类")
         headwear = resolve(headwear, None, None)
         shoes = resolve(shoes, "鞋子类型", "鞋类")
         sexy_clothing = resolve(sexy_clothing, "情趣服装", "情趣衣服")
-        figure_setting = resolve(figure_setting, "人物设定", "类型")
         framing = resolve(framing, "景别", "类型")
-
-        if figure_setting == "随机":
-            figure_setting = random.choice(["单人", "双人", "情侣", "闺蜜", "兄弟", "家人", "同事", "主仆", "对手", "观众", "路人", "人群"])
-
-        if gender_type == "随机":
-            gender_type = random.choice(["女性", "男性", "风景", "插画", "动物", "建筑", "抽象艺术"])
 
         coherent = get_coherent_attributes(style_theme if style_theme != "无" else None)
 
         prompt = self._generate_prompt(
             style, type_val, detail_level, gender_type, race_choice, contact_lens_choice,
-            background, stocking, headwear, shoes, sexy_clothing, figure_setting, framing,
+            stocking, headwear, shoes, sexy_clothing, figure_setting, framing,
             include_pose, include_details, include_quality, include_suffix,
             enable_foreground, fanciful, whimsical, coherent, nsfw, selected_age, selected_body, backpack
         )
@@ -265,13 +253,10 @@ class ZImagePromptGeneratorNode:
         return (prompt,)
 
     def _generate_prompt(self, style, type_val, detail_level, gender_type, race_choice,
-                         contact_lens_choice, background, stocking, headwear, shoes,
+                         contact_lens_choice, stocking, headwear, shoes,
                          sexy_clothing, figure_setting, framing, include_pose, include_details,
                          include_quality, include_suffix, enable_foreground, fanciful, whimsical,
                          coherent, nsfw=False, selected_age="无", selected_body="无", backpack="无"):
-
-        if gender_type in ["风景", "插画", "动物", "建筑", "抽象艺术"]:
-            return self._generate_special_prompt(style, type_val, detail_level, background, gender_type, figure_setting, enable_foreground, fanciful, whimsical, framing)
 
         nsfw_body = ""
         nsfw_pose = ""
@@ -303,20 +288,33 @@ class ZImagePromptGeneratorNode:
             clothing_type = get_random_item("服装造型", "古装")
         else:
             clothing_type = random.choice([get_random_item("服装造型", "上衣"), get_random_item("服装造型", "连衣裙"), get_random_item("服装造型", "制服校服")])
+        
         material = get_random_item("服装造型", "材质")
         color = get_random_item("服装造型", "颜色")
         accessory = get_random_item("服装造型", "配饰")
 
+        # === 优化后的场景逻辑 ===
         scene_type = random.choice(["室内场景", "室外场景"])
         scene = get_random_item("场景环境", scene_type)
         time_weather = get_random_item("场景环境", "时间天气")
+        
+        # 避免明显不合理搭配（如春季+音乐教室）
+        if scene_type == "室内场景" and any(t in time_weather for t in ["春季", "夏季", "秋季", "冬季", "樱花季", "枫叶季"]):
+            time_weather = random.choice(["清晨", "午后", "黄昏", "夜晚", "午夜", "晴天", "阴天", "雨天"])
+
         atmosphere = nsfw_atmosphere + coherent["氛围"] if nsfw else coherent["氛围"]
 
         lens = get_random_item("拍摄参数", "镜头")
         safe_compositions = ["中心构图", "三分法构图", "对称构图", "留白构图", "对角线构图", "三角形构图", "S形构图", "黄金分割", "螺旋构图"]
         composition = get_random_item("构图光影", "构图") if enable_foreground else random.choice(safe_compositions)
-        safe_depths = ["浅景深", "大光圈虚化", "中等景深", "奶油般化开", "光斑效果", "焦外成像"]
-        depth = get_random_item("构图光影", "景深") if enable_foreground else random.choice(safe_depths)
+        
+        # 减少背景虚化频率
+        if detail_level in ["大师级", "极致级"] and random.random() < 0.35:  # 仅35%概率出现虚化
+            depth = get_random_item("构图光影", "景深")
+        else:
+            safe_depths = ["中等景深", "全清晰"]
+            depth = random.choice(safe_depths)
+
         light_type = coherent["光线"]
         light_effect = get_random_item("构图光影", "光影效果")
 
@@ -341,32 +339,32 @@ class ZImagePromptGeneratorNode:
         prompt_parts = []
         if style: prompt_parts.append(f"{style}")
         if type_val: prompt_parts.append(f"{type_val}")
-        prompt_parts.append(f"，镜头选择{lens}。")
+        prompt_parts.append(f"，使用{lens}镜头拍摄。")
         prompt_parts.append(f"{framing_desc}")
 
-        if figure_setting == "单人":
-            prompt_parts.append(f"模特设定：一位{age_str}{race_desc}模特，{body_str}拥有{face1}，{face2}，{hair}，气质{temperament}。")
-        else:
-            prompt_parts.append(f"模特设定：{figure_setting}，其中一位是{age_str}{race_desc}模特，{body_str}拥有{face1}，{face2}，{hair}，气质{temperament}。")
+        prompt_parts.append(f"一位{age_str}{race_desc}年轻女性，{body_str}拥有{face1}，{face2}，{hair}，气质{temperament}。")
 
         if contact_lens_choice:
             prompt_parts.append(f"佩戴{contact_lens_choice}美瞳，")
-        if sexy_clothing:
+        if sexy_clothing and sexy_clothing != "无":
             prompt_parts.append(f"穿着{sexy_clothing}，")
 
-        clothing_desc = f"身着{color}的{material}{clothing_type}，{nsfw_body}"
+        clothing_desc = f"身着{color}{material}{clothing_type}，{nsfw_body}"
         if stocking and stocking != "无":
             clothing_desc += f"搭配{stocking}，"
         prompt_parts.append(clothing_desc)
 
         if headwear and headwear != "无":
             prompt_parts.append(f"佩戴{headwear}，")
+
+        # 优化：避免配饰和背包同时出现行李箱相关描述
         if accessory and accessory != "无":
-            prompt_parts.append(f"佩戴{accessory}，")
+            if "行李箱" not in accessory or backpack == "无":
+                prompt_parts.append(f"佩戴{accessory}，")
+
         if shoes and shoes != "无":
             prompt_parts.append(f"脚穿{shoes}，")
 
-        # ========== 背包处理 ==========
         if backpack and backpack != "无":
             prompt_parts.append(f"背着{backpack}，")
 
@@ -375,9 +373,9 @@ class ZImagePromptGeneratorNode:
         else:
             prompt_parts.append(f"表情{expression}，{eyes}。")
 
-        prompt_parts.append(f"置身于{time_weather}的{scene}，{atmosphere}的氛围。")
+        prompt_parts.append(f"置身于{time_weather}{scene}，氛围{atmosphere}。")
         prompt_parts.append(f"采用{composition}，景深为{depth}。画面色调为{tone}，{color_style}。")
-        prompt_parts.append(f"光线来自{light_type}，形成{light_effect}效果。")
+        prompt_parts.append(f"光线为{light_type}，形成{light_effect}效果。")
 
         extra_details = []
         if include_details:
