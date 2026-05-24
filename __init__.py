@@ -113,6 +113,15 @@ libraries["NSFW元素"] = {
     "情色氛围": ["极致淫乱", "欲火焚身高潮连连", "肉欲横流春心荡漾", "淫靡湿热", "高潮痉挛潮吹", "色情至极", "情欲爆炸", "极致色气满满", "欲仙欲死", "浪叫连连"]
 }
 
+# ====================== 动作菜单 ======================
+action_options = [
+    "无", "侧身回眸", "站立靠墙", "坐在窗边", "慵懒倚靠沙发", "双手抱胸", "轻抚发丝", 
+    "手插口袋", "抬头望天", "低头沉思", "跪坐姿势", "M字腿", "双腿大开", "撅起臀部", 
+    "跪姿翘臀", "分开双腿", "双手托胸", "双手揉胸", "伸舌头", "翻白眼", "咬唇呻吟", 
+    "潮吹姿势", "仰卧抬腿", "后入式翘臀", "骑乘位扭腰", "四肢着地狗爬式", 
+    "手指插入蜜穴", "舌头伸出流口水", "高潮颤抖", "侧躺抬腿暴露", "站立弯腰翘臀"
+]
+
 def get_random_item(category, subcategory):
     if category in libraries and subcategory in libraries[category]:
         items = libraries[category][subcategory]
@@ -137,7 +146,7 @@ def get_coherent_attributes(style_theme):
 
 
 class ZImagePromptGeneratorNode:
-    """Z-image-落日-提示词生成器 - ComfyUI 自定义节点（优化版）"""
+    """Z-image-落日-提示词生成器 - 优化版"""
     CATEGORY = "prompt_generators"
 
     @classmethod
@@ -151,31 +160,22 @@ class ZImagePromptGeneratorNode:
                 "拍摄风格": (libraries["拍摄主题"]["风格"] + ["随机", "无"], {"default": "随机"}),
                 "拍摄类型": (libraries["拍摄主题"]["类型"] + ["随机", "无"], {"default": "随机"}),
                 "细节级别": (["简洁级", "普通级", "详细级", "大师级", "极致级", "无"], {"default": "大师级"}),
-                "模特性别": (["女性"], {"default": "女性"}),   # 只保留女性
-                "人种选择": (libraries["人种类型"]["人种"] + ["随机", "无"], {"default": "亚洲人"}),
+                "动作": (action_options, {"default": "无"}),
+                "年龄": (age_options, {"default": "无"}),
+                "身材": (body_options, {"default": "无"}),
+                "种族选择": (libraries["人种类型"]["人种"] + ["随机", "无"], {"default": "亚洲人"}),
                 "美瞳选择": (libraries["美瞳种类"]["美瞳"] + ["随机"], {"default": "无"}),
-                # "背景选择": 已删除
                 "丝袜类型": (libraries["丝袜类型"]["丝袜种类"], {"default": "无"}),
                 "头部配饰": (list(set([item for sublist in libraries["头部配饰"].values() for item in sublist])), {"default": "无"}),
                 "鞋子类型": (libraries["鞋子类型"]["鞋类"], {"default": "无"}),
                 "情趣衣服": (libraries["情趣服装"]["情趣衣服"], {"default": "无"}),
-                "人物数量关系": (["单人"], {"default": "单人"}),   # 固定为单人
                 "景别": (libraries["景别"]["类型"], {"default": "半身照"}),
-
-                "背包": (["无", "双肩背包", "单肩斜挎包", "链条小方包", "手提包", "托特包", "邮差包", "透明背包", "皮质双肩包", "帆布背包", "迷你背包", "大容量背包", "时尚书包", "旅行背包", "学生书包"], {"default": "无"}),
-
-                "年龄": (age_options, {"default": "无"}),
-                "身材": (body_options, {"default": "无"}),
-
                 "NSFW": ("BOOLEAN", {"default": False, "label": "NSFW（漏骨模式）"}),
-
                 "包含姿势描述": ("BOOLEAN", {"default": True}),
                 "包含高级细节": ("BOOLEAN", {"default": True}),
                 "包含画质参数": ("BOOLEAN", {"default": True}),
                 "包含后缀参数": ("BOOLEAN", {"default": True}),
                 "启用前景特效": ("BOOLEAN", {"default": False}),
-                "天马行空": ("BOOLEAN", {"default": False}),
-                "奇思妙想": ("BOOLEAN", {"default": False}),
                 "seed": ("INT", {"default": 0, "min": 0, "max": 0xffffffffffffffff}),
             },
             "optional": {
@@ -192,31 +192,28 @@ class ZImagePromptGeneratorNode:
         seed = kwargs.get("seed", 0)
         random.seed(seed)
 
-        selected_age = kwargs.get("年龄", "无")
-        selected_body = kwargs.get("身材", "无")
-        backpack = kwargs.get("背包", "无")
-        nsfw = kwargs.get("NSFW", False)
-
         style_theme = kwargs.get("风格主题", "随机")
         style = kwargs.get("拍摄风格", "随机")
         type_val = kwargs.get("拍摄类型", "随机")
         detail_level = kwargs.get("细节级别", "大师级")
-        gender_type = "女性"  # 固定女性
-        race_choice = kwargs.get("人种选择", "亚洲人")
+        action = kwargs.get("动作", "无")
+        selected_age = kwargs.get("年龄", "无")
+        selected_body = kwargs.get("身材", "无")
+        nsfw = kwargs.get("NSFW", False)
+
+        race_choice = kwargs.get("种族选择", "亚洲人")
         contact_lens_choice = kwargs.get("美瞳选择", "无")
         stocking = kwargs.get("丝袜类型", "无")
         headwear = kwargs.get("头部配饰", "无")
         shoes = kwargs.get("鞋子类型", "无")
         sexy_clothing = kwargs.get("情趣衣服", "无")
-        figure_setting = "单人"  # 固定单人
         framing = kwargs.get("景别", "半身照")
+
         include_pose = kwargs.get("包含姿势描述", True)
         include_details = kwargs.get("包含高级细节", True)
         include_quality = kwargs.get("包含画质参数", True)
         include_suffix = kwargs.get("包含后缀参数", True)
         enable_foreground = kwargs.get("启用前景特效", False)
-        fanciful = kwargs.get("天马行空", False)
-        whimsical = kwargs.get("奇思妙想", False)
 
         def resolve(value, category, subcategory):
             if value == "随机":
@@ -227,12 +224,9 @@ class ZImagePromptGeneratorNode:
 
         style = resolve(style, "拍摄主题", "风格")
         type_val = resolve(type_val, "拍摄主题", "类型")
-        if detail_level == "无":
-            detail_level = ""
         race_choice = resolve(race_choice, "人种类型", "人种")
         contact_lens_choice = resolve(contact_lens_choice, "美瞳种类", "美瞳")
         stocking = resolve(stocking, "丝袜类型", "丝袜种类")
-        headwear = resolve(headwear, None, None)
         shoes = resolve(shoes, "鞋子类型", "鞋类")
         sexy_clothing = resolve(sexy_clothing, "情趣服装", "情趣衣服")
         framing = resolve(framing, "景别", "类型")
@@ -240,10 +234,10 @@ class ZImagePromptGeneratorNode:
         coherent = get_coherent_attributes(style_theme if style_theme != "无" else None)
 
         prompt = self._generate_prompt(
-            style, type_val, detail_level, gender_type, race_choice, contact_lens_choice,
-            stocking, headwear, shoes, sexy_clothing, figure_setting, framing,
-            include_pose, include_details, include_quality, include_suffix,
-            enable_foreground, fanciful, whimsical, coherent, nsfw, selected_age, selected_body, backpack
+            style, type_val, detail_level, action, race_choice, contact_lens_choice,
+            stocking, headwear, shoes, sexy_clothing, framing, include_pose,
+            include_details, include_quality, include_suffix, enable_foreground,
+            coherent, nsfw, selected_age, selected_body
         )
 
         prompt_input = kwargs.get("prompt_input", "")
@@ -252,26 +246,18 @@ class ZImagePromptGeneratorNode:
 
         return (prompt,)
 
-    def _generate_prompt(self, style, type_val, detail_level, gender_type, race_choice,
+    def _generate_prompt(self, style, type_val, detail_level, action, race_choice,
                          contact_lens_choice, stocking, headwear, shoes,
-                         sexy_clothing, figure_setting, framing, include_pose, include_details,
-                         include_quality, include_suffix, enable_foreground, fanciful, whimsical,
-                         coherent, nsfw=False, selected_age="无", selected_body="无", backpack="无"):
+                         sexy_clothing, framing, include_pose, include_details,
+                         include_quality, include_suffix, enable_foreground,
+                         coherent, nsfw=False, selected_age="无", selected_body="无"):
 
-        nsfw_body = ""
-        nsfw_pose = ""
-        nsfw_atmosphere = ""
+        nsfw_body = random.choice(libraries["NSFW元素"]["身体强调"]) + "，" if nsfw else ""
 
-        if nsfw:
-            nsfw_body = random.choice(libraries["NSFW元素"]["身体强调"]) + "，"
-            if include_pose:
-                nsfw_pose = random.choice(libraries["NSFW元素"]["性感姿势"])
-            nsfw_atmosphere = random.choice(libraries["NSFW元素"]["情色氛围"])
-
-            if not sexy_clothing or sexy_clothing == "无":
-                sexy_clothing = random.choice([item for item in libraries["情趣服装"]["情趣衣服"] if item != "无" and item != "随机"])
-            if stocking == "无":
-                stocking = random.choice([s for s in libraries["丝袜类型"]["丝袜种类"] if s != "无" and s != "随机"])
+        if nsfw and (not sexy_clothing or sexy_clothing == "无"):
+            sexy_clothing = random.choice([item for item in libraries["情趣服装"]["情趣衣服"] if item not in ["无", "随机"]])
+        if nsfw and stocking == "无":
+            stocking = random.choice([s for s in libraries["丝袜类型"]["丝袜种类"] if s not in ["无", "随机"]])
 
         age_str = f"{selected_age}的" if selected_age != "无" else ""
         body_str = f"{selected_body}，" if selected_body != "无" else ""
@@ -282,7 +268,6 @@ class ZImagePromptGeneratorNode:
         while face2 == face1:
             face2 = get_random_item("模特设定", "面部特征")
         hair = get_random_item("模特设定", "发型发色")
-        temperament = coherent["气质"]
 
         if type_val == "古装":
             clothing_type = get_random_item("服装造型", "古装")
@@ -291,30 +276,16 @@ class ZImagePromptGeneratorNode:
         
         material = get_random_item("服装造型", "材质")
         color = get_random_item("服装造型", "颜色")
-        accessory = get_random_item("服装造型", "配饰")
 
-        # === 优化后的场景逻辑 ===
         scene_type = random.choice(["室内场景", "室外场景"])
         scene = get_random_item("场景环境", scene_type)
         time_weather = get_random_item("场景环境", "时间天气")
-        
-        # 避免明显不合理搭配（如春季+音乐教室）
-        if scene_type == "室内场景" and any(t in time_weather for t in ["春季", "夏季", "秋季", "冬季", "樱花季", "枫叶季"]):
-            time_weather = random.choice(["清晨", "午后", "黄昏", "夜晚", "午夜", "晴天", "阴天", "雨天"])
 
-        atmosphere = nsfw_atmosphere + coherent["氛围"] if nsfw else coherent["氛围"]
+        atmosphere = coherent["氛围"]
 
         lens = get_random_item("拍摄参数", "镜头")
-        safe_compositions = ["中心构图", "三分法构图", "对称构图", "留白构图", "对角线构图", "三角形构图", "S形构图", "黄金分割", "螺旋构图"]
-        composition = get_random_item("构图光影", "构图") if enable_foreground else random.choice(safe_compositions)
-        
-        # 减少背景虚化频率
-        if detail_level in ["大师级", "极致级"] and random.random() < 0.35:  # 仅35%概率出现虚化
-            depth = get_random_item("构图光影", "景深")
-        else:
-            safe_depths = ["中等景深", "全清晰"]
-            depth = random.choice(safe_depths)
-
+        composition = get_random_item("构图光影", "构图")
+        depth = get_random_item("构图光影", "景深")
         light_type = coherent["光线"]
         light_effect = get_random_item("构图光影", "光影效果")
 
@@ -323,10 +294,8 @@ class ZImagePromptGeneratorNode:
         expression = coherent["表情"]
         eyes = coherent["眼神"]
 
-        pose = get_random_item("姿势动作", "全身姿势") if include_pose else ""
-        if nsfw and nsfw_pose:
-            pose = nsfw_pose
-        hand_action = get_random_item("姿势动作", "手部动作") if include_pose else ""
+        # 动作优先级：用户选择的动作 > 随机姿势
+        pose = action if action != "无" else (get_random_item("姿势动作", "全身姿势") if include_pose else "")
 
         framing_desc = {
             "全身照": "全身像，从头到脚完整呈现，",
@@ -337,14 +306,14 @@ class ZImagePromptGeneratorNode:
         }.get(framing, "半身肖像，")
 
         prompt_parts = []
-        if style: prompt_parts.append(f"{style}")
-        if type_val: prompt_parts.append(f"{type_val}")
+        if style: prompt_parts.append(style)
+        if type_val: prompt_parts.append(type_val)
         prompt_parts.append(f"，使用{lens}镜头拍摄。")
-        prompt_parts.append(f"{framing_desc}")
+        prompt_parts.append(framing_desc)
 
-        prompt_parts.append(f"一位{age_str}{race_desc}年轻女性，{body_str}拥有{face1}，{face2}，{hair}，气质{temperament}。")
+        prompt_parts.append(f"一位{age_str}{race_desc}年轻女性，{body_str}拥有{face1}，{face2}，{hair}，气质{coherent['气质']}。")
 
-        if contact_lens_choice:
+        if contact_lens_choice and contact_lens_choice != "无":
             prompt_parts.append(f"佩戴{contact_lens_choice}美瞳，")
         if sexy_clothing and sexy_clothing != "无":
             prompt_parts.append(f"穿着{sexy_clothing}，")
@@ -356,20 +325,11 @@ class ZImagePromptGeneratorNode:
 
         if headwear and headwear != "无":
             prompt_parts.append(f"佩戴{headwear}，")
-
-        # 优化：避免配饰和背包同时出现行李箱相关描述
-        if accessory and accessory != "无":
-            if "行李箱" not in accessory or backpack == "无":
-                prompt_parts.append(f"佩戴{accessory}，")
-
         if shoes and shoes != "无":
             prompt_parts.append(f"脚穿{shoes}，")
 
-        if backpack and backpack != "无":
-            prompt_parts.append(f"背着{backpack}，")
-
         if pose:
-            prompt_parts.append(f"以{pose}的姿态，{hand_action}，表情{expression}，{eyes}。")
+            prompt_parts.append(f"{pose}，表情{expression}，{eyes}。")
         else:
             prompt_parts.append(f"表情{expression}，{eyes}。")
 
@@ -377,101 +337,24 @@ class ZImagePromptGeneratorNode:
         prompt_parts.append(f"采用{composition}，景深为{depth}。画面色调为{tone}，{color_style}。")
         prompt_parts.append(f"光线为{light_type}，形成{light_effect}效果。")
 
-        extra_details = []
         if include_details:
-            extra_details.append(f"中景聚焦模特，背景虚化为柔和光斑。")
-        if detail_level in ["详细级", "大师级", "极致级"]:
-            extra_details.append(f"衣物{material}材质在光照下呈现丰富层次，高光至暗部过渡平滑。")
+            prompt_parts.append("肌肤细腻，发丝清晰，眼神有神，服装材质层次丰富。")
         if detail_level in ["大师级", "极致级"]:
-            extra_details.append(f"模特肌肤质感细腻，发丝根根分明，眼神光清晰可见。")
-        if detail_level == "极致级":
-            extra_details.append(f"光影层次丰富，轮廓光勾勒出身体曲线，暗部细节保留完好。")
-            extra_details.append(f"整体氛围充满故事感，仿佛电影中的一帧画面。")
-
-        if fanciful:
-            extra_details.append(random.choice(["画面中漂浮着发光的星辰，", "空气中弥漫着魔法粒子，"]))
-        if whimsical:
-            extra_details.append(random.choice(["一只调皮的猫咪突然闯入画面，", "风把模特的头发吹成了诱人形状，"]))
-
-        for detail in extra_details:
-            prompt_parts.append(detail)
+            prompt_parts.append("电影级光影，极致细节渲染，故事感强。")
 
         if include_quality:
-            resolution = get_random_item("后期处理", "分辨率")
-            quality = get_random_item("后期处理", "画质")
-            effect = get_random_item("后期处理", "特效")
-            prompt_parts.append(f"{resolution}，{quality}，{effect}。")
+            prompt_parts.append("8K超高清，锐利清晰，电影感调色。")
 
         if include_suffix:
-            suffix_options = [
-                " --ar 9:16 --s 750 --v 6.0",
-                " --ar 3:4 --s 650 --q 2",
-                " --ar 2:3 --style raw --chaos 20",
-                " --ar 1:1 --s 500 --stylize 1000"
-            ]
-            prompt_parts.append(random.choice(suffix_options))
+            prompt_parts.append(random.choice([" --ar 9:16 --s 750 --v 6", " --ar 3:4 --stylize 650", " --ar 2:3 --style raw"]))
 
-        final_prompt = "".join(prompt_parts)
-
-        target_chars = None
-        if detail_level == "简洁级": target_chars = 200
-        elif detail_level == "普通级": target_chars = 250
-        elif detail_level == "详细级": target_chars = 300
-        elif detail_level == "大师级": target_chars = 400
-        elif detail_level == "极致级": target_chars = random.randint(500, 1000)
-
-        if target_chars and len(final_prompt) > target_chars:
-            sentences = final_prompt.split("。")
-            new_prompt = ""
-            for sent in sentences:
-                if len(new_prompt) + len(sent) + 1 <= target_chars:
-                    new_prompt += sent + "。"
-                else:
-                    break
-            final_prompt = new_prompt if new_prompt else sentences[0] + "。"
+        final_prompt = "".join(prompt_parts).strip("，") + "。"
 
         return final_prompt
 
-    def _generate_special_prompt(self, style, type_val, detail_level, background, gender_type, figure_setting, enable_foreground, fanciful, whimsical, framing):
-        time_weather = get_random_item("场景环境", "时间天气")
-        scene = get_random_item("场景环境", "室外场景")
-        atmosphere = get_random_item("场景环境", "氛围感觉")
-        tone = get_random_item("色彩色调", "色调")
-        color_style = get_random_item("色彩色调", "色彩风格")
-
-        if enable_foreground:
-            composition = get_random_item("构图光影", "构图")
-        else:
-            safe_compositions = ["中心构图", "三分法构图", "对称构图", "留白构图", "对角线构图", "三角形构图", "S形构图", "黄金分割", "螺旋构图", "并列构图"]
-            composition = random.choice(safe_compositions)
-
-        framing_desc = {"全身照": "全景，", "七分照": "七分景，", "半身照": "中景，", "特写": "特写，", "局部特写": "局部特写，"}.get(framing, "")
-
-        if gender_type == "风景":
-            prompt = f"{style}风景摄影，{type_val}风格。{framing_desc}{time_weather}的{scene}，{atmosphere}的氛围。"
-        elif gender_type == "插画":
-            prompt = f"{style}插画作品，{type_val}风格。{framing_desc}{time_weather}的{scene}场景，{atmosphere}。{tone}色调，{color_style}，数字绘画。"
-        elif gender_type == "动物":
-            animals = ["猫咪", "狗狗", "兔子", "狐狸", "鹿", "马", "鸟", "蝴蝶", "鱼", "熊猫"]
-            animal = random.choice(animals)
-            prompt = f"{style}动物摄影，{type_val}风格。{framing_desc}一只可爱的{animal}在{time_weather}的{scene}中，{composition}构图。"
-        elif gender_type == "建筑":
-            prompt = f"{style}建筑摄影，{type_val}风格。{framing_desc}{time_weather}的{scene}建筑，{composition}构图，{tone}色调。"
-        else:
-            prompt = f"{style}抽象艺术作品，{type_val}风格。{framing_desc}{tone}色调，{color_style}。抽象表现主义，几何图形，色彩碰撞。"
-
-        if background and background != "无":
-            prompt += f"背景{background}，"
-        if include_quality:
-            prompt += "8K超高清，高细节。"
-        if include_suffix:
-            prompt += " --ar 16:9 --s 500"
-
-        return prompt
-
 
 class ZImagePromptLoaderNode:
-    """Z-image-落日-提示词调用节点 - 从插件同目录加载JSON提示词"""
+    """Z-image-落日-提示词抽取器"""
     CATEGORY = "prompt_generators"
 
     @classmethod
@@ -535,70 +418,12 @@ class ZImagePromptLoaderNode:
             return (f"读取失败: {str(e)}",)
 
 
-# ====================== NSFW专用节点 ======================
-class ZImageNSFWNode:
-    """Z-image-落日-NSFW测试版 - 只输出极致NSFW内容"""
-    CATEGORY = "prompt_generators"
-
-    @classmethod
-    def INPUT_TYPES(cls):
-        return {
-            "required": {
-                "强度": (["轻度", "中度", "重度", "极致"], {"default": "极致"}),
-                "seed": ("INT", {"default": 0, "min": 0, "max": 0xffffffffffffffff}),
-            }
-        }
-
-    RETURN_TYPES = ("STRING",)
-    RETURN_NAMES = ("prompt",)
-    FUNCTION = "generate"
-    OUTPUT_NODE = True
-
-    def generate(self, 强度, seed):
-        random.seed(seed)
-
-        nsfw_lib = {
-            "body": ["丰满坚挺的乳房", "深邃诱人乳沟", "硬挺粉嫩乳头", "肿胀湿润阴唇", "晶莹蜜液流出的蜜穴", "微微张开的粉嫩私处", "高潮喷水的蜜穴", "肿胀敏感阴蒂", "紧致收缩肛门", "全身汗湿光泽肌肤", "乳头喷奶", "阴唇肿胀流蜜", "潮红高潮私密部位", "肥美多汁阴唇", "紧致粉嫩蜜穴", "丰满翘臀", "修长美腿", "纤细腰肢", "完美S曲线", "水光肌肤"],
-            "pose": ["双腿大开M型完全暴露", "跪姿高翘臀后入式", "仰卧M型大开腿", "手指猛烈抽插蜜穴", "舌头伸出滴口水高潮脸", "潮吹喷水全身颤抖", "后入双手拉开臀瓣", "骑乘位猛烈扭腰套弄", "四肢着地狗爬式高翘臀", "双手托胸挤出深沟自慰", "高潮痉挛喷水四溅", "侧躺抬腿暴露私处", "站立弯腰翘臀", "坐在桌子上双腿大开", "床上翻滚浪叫"],
-            "action": ["手指快速抽插蜜穴", "舌头舔弄肿胀乳头", "双手用力揉捏乳房", "猛烈扭腰摩擦", "潮吹喷射液体", "浪叫呻吟不止", "身体剧烈痉挛", "蜜液四处飞溅", "自慰达到高潮", "后入猛烈撞击", "骑乘位上下猛套", "手指玩弄阴蒂", "舌头深入私处"],
-            "expression": ["高潮迷离眼神", "舌头伸出流口水", "欲仙欲死表情", "浪叫连连", "脸颊潮红", "半睁眼含情脉脉", "咬唇呻吟", "眼角泪水", "极致愉悦扭曲", "春心荡漾媚眼"],
-            "atmosphere": ["极致淫乱", "欲火焚身高潮连连", "肉欲横流", "淫靡湿热", "情欲爆炸", "欲仙欲死", "浪叫不止", "高潮痉挛", "春心荡漾", "极致色气"],
-            "clothing": ["完全脱光", "半脱蕾丝内衣", "开裆黑丝袜", "透明情趣睡裙", "绑带胸衣", "无内裤", "乳头完全暴露", "私处完全暴露", "湿透透明内裤", "撕破渔网袜", "情趣皮革束缚", "金属链条装饰"],
-            "quality": ["8K超高清", "极致细节渲染", "真实湿润光泽", "高潮潮红真实", "动态捕捉液体飞溅", "超写实肌理", "湿滑反光", "极致色气"]
-        }
-
-        if 强度 == "轻度":
-            num_body = 2
-        elif 强度 == "中度":
-            num_body = 4
-        elif 强度 == "重度":
-            num_body = 7
-        else:
-            num_body = 12
-
-        body = "，".join(random.sample(nsfw_lib["body"], min(num_body, len(nsfw_lib["body"]))))
-        pose = random.choice(nsfw_lib["pose"])
-        action = random.choice(nsfw_lib["action"])
-        expr = random.choice(nsfw_lib["expression"])
-        atm = random.choice(nsfw_lib["atmosphere"])
-        cloth = random.choice(nsfw_lib["clothing"])
-
-        prompt = f"极具魅力的年轻亚洲女性，冷白皮，{body}，{cloth}，{pose}，{action}，表情{expr}，{atm}的氛围，{random.choice(nsfw_lib['quality'])}，超写实，8K最高画质"
-
-        if 强度 == "极致":
-            prompt += f"，{random.choice(nsfw_lib['body'])}，{random.choice(nsfw_lib['action'])}，高潮痉挛喷水，蜜液四溅，浪叫连连"
-
-        return (prompt,)
-
-
 NODE_CLASS_MAPPINGS = {
     "ZImagePromptGeneratorNode": ZImagePromptGeneratorNode,
     "ZImagePromptLoaderNode": ZImagePromptLoaderNode,
-    "ZImageNSFWNode": ZImageNSFWNode,
 }
 
 NODE_DISPLAY_NAME_MAPPINGS = {
     "ZImagePromptGeneratorNode": "✨ Z-image-落日-提示词生成器",
     "ZImagePromptLoaderNode": "✨ Z-image-落日-提示词抽取器",
-    "ZImageNSFWNode": "🔥 Z-image-落日-NSFW测试版",
 }
