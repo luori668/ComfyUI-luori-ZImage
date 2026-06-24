@@ -6,6 +6,9 @@
 
 添加了一个工作流。
 
+# 增加了Krea-2的lora填充窗口
+  新增一个穿搭预设选择器
+
 ## ✨ 使用方法
 插件更新后 删除画布内插件重新添加
 
@@ -37,7 +40,8 @@ comfyUI画布内 双击搜索 落日  即可
 3. 搜索 `luori-ZImage` 或 `ComfyUI-luori-ZImage`
 4. 安装后重启 ComfyUI
 
-5.<img width="638" height="828" alt="870c94d4-8e8d-4854-8082-afd39360fc99" src="https://github.com/user-attachments/assets/fbc23fb9-6f9e-4055-8bca-ea32cad2aa48" />
+5.<img width="1434" height="978" alt="1a60ab76-91e8-4e55-a099-32ded32e4581" src="https://github.com/user-attachments/assets/b7dd3b23-f09a-467f-920c-b92c3224e875" />
+
 
 
 
