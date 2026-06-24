@@ -146,7 +146,6 @@ def get_coherent_attributes(style_theme):
 
 
 class ZImagePromptGeneratorNode:
-    """Z-image-落日-提示词生成器 - 优化版"""
     CATEGORY = "prompt_generators"
 
     @classmethod
@@ -160,6 +159,15 @@ class ZImagePromptGeneratorNode:
                 "拍摄风格": (libraries["拍摄主题"]["风格"] + ["随机", "无"], {"default": "随机"}),
                 "拍摄类型": (libraries["拍摄主题"]["类型"] + ["随机", "无"], {"default": "随机"}),
                 "细节级别": (["简洁级", "普通级", "详细级", "大师级", "极致级", "无"], {"default": "大师级"}),
+                # 关键修改：键名改为中文
+                "Krea-2 解限触发词1": ("STRING", {"default": "", "multiline": False}),
+                "启用1": ("BOOLEAN", {"default": False}),
+                "Krea-2 解限触发词2": ("STRING", {"default": "", "multiline": False}),
+                "启用2": ("BOOLEAN", {"default": False}),
+                "Krea-2 解限触发词3": ("STRING", {"default": "", "multiline": False}),
+                "启用3": ("BOOLEAN", {"default": False}),
+                "Krea-2 解限触发词4": ("STRING", {"default": "", "multiline": False}),
+                "启用4": ("BOOLEAN", {"default": False}),
                 "动作": (action_options, {"default": "无"}),
                 "年龄": (age_options, {"default": "无"}),
                 "身材": (body_options, {"default": "无"}),
@@ -215,6 +223,13 @@ class ZImagePromptGeneratorNode:
         include_suffix = kwargs.get("包含后缀参数", True)
         enable_foreground = kwargs.get("启用前景特效", False)
 
+        triggers = []
+        for i in range(1, 5):
+            trigger = kwargs.get(f"Krea-2 解限触发词{i}", "").strip()
+            enabled = kwargs.get(f"启用{i}", False)
+            if trigger and enabled:
+                triggers.append(trigger)
+
         def resolve(value, category, subcategory):
             if value == "随机":
                 return get_random_item(category, subcategory)
@@ -243,6 +258,11 @@ class ZImagePromptGeneratorNode:
         prompt_input = kwargs.get("prompt_input", "")
         if prompt_input:
             prompt = prompt_input + "\n" + prompt
+
+        if triggers:
+            trigger_str = ", ".join(triggers)
+            if trigger_str not in prompt:
+                prompt = trigger_str + " " + prompt
 
         return (prompt,)
 
@@ -294,7 +314,6 @@ class ZImagePromptGeneratorNode:
         expression = coherent["表情"]
         eyes = coherent["眼神"]
 
-        # 动作优先级：用户选择的动作 > 随机姿势
         pose = action if action != "无" else (get_random_item("姿势动作", "全身姿势") if include_pose else "")
 
         framing_desc = {
@@ -418,12 +437,126 @@ class ZImagePromptLoaderNode:
             return (f"读取失败: {str(e)}",)
 
 
+class ZImageFashionPresetLoaderNode:
+    CATEGORY = "prompt_generators"
+
+    STYLE_ENHANCE = {
+        "日系": ["日系清透质感", "柔和漫射光", "通透肤色", "自然治愈氛围", "胶片感色调"],
+        "韩系": ["韩系精致水光肌", "温柔奶油色调", "优雅气质", "高级柔光", "都市时尚感"],
+        "法式": ["法式慵懒随性", "自然光晕", "浪漫电影感", "柔和对比", "复古胶片质感"],
+        "美式": ["美式复古活力", "鲜明色彩碰撞", "街头潮流感", "动感光影", "青春能量"],
+        "森系": ["森系文艺自然", "植物柔光", "大地色系", "宁静空灵感", "自然材质纹理"],
+        "纯欲": ["纯欲风清透感", "朦胧梦幻光影", "初恋般柔和", "水润光泽", "温柔氛围"],
+        "极简": ["极简主义克制美学", "干净利落线条", "高级灰调", "质感光影", "现代建筑感"],
+        "暗黑": ["暗黑哥特美学", "强对比戏剧光", "冷冽金属感", "神秘深邃氛围", "硬朗轮廓"],
+        "复古港风": ["港风复古华丽", "霓虹色彩", "强烈光影反差", "怀旧电影感", "戏剧性"],
+        "运动": ["运动活力动感", "高速快门捕捉", "鲜艳高饱和度", "青春律动", "阳光健康"],
+        "洛丽塔": ["洛丽塔甜美梦幻", "柔光童话感", "精致蕾丝细节", "粉嫩色彩", "少女情怀"],
+        "中性": ["中性冷淡风格", "干净利落", "低饱和度高级灰", "极简线条", "文艺克制"],
+        "度假": ["度假热带风情", "温暖金色阳光", "自然松弛感", "明亮通透", "夏日清新"],
+        "盐系": ["盐系清爽透明感", "自然柔光", "素净色调", "日常治愈", "日系简约"],
+        "破碎": ["破碎情绪感", "强烈明暗对比", "戏剧光影", "故事叙事性", "细腻情感"],
+        "甜辣": ["甜辣街头活力", "荧光色彩", "年轻俏皮", "动感抓拍", "潮流气息"],
+        "复古": ["复古怀旧质感", "暖调胶片色", "颗粒感", "时光沉淀", "经典光影"],
+        "未来": ["赛博朋克未来感", "霓虹冷光", "金属质感", "科技氛围", "高饱和电子色"],
+        "国风": ["国风古韵", "工笔淡彩", "水墨意境", "飘逸线条", "东方美学"],
+        "职业": ["职场精英干练", "专业质感", "冷静光影", "现代办公氛围", "利落线条"],
+    }
+
+    DEFAULT_ENHANCE = ["顶级摄影质感", "超写实渲染", "丰富细节层次", "电影级光影", "8K超高清", "色彩精准", "构图考究", "艺术感染力"]
+
+    @classmethod
+    def INPUT_TYPES(cls):
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        json_path = os.path.join(current_dir, "fashion_presets.json")
+        presets = [("随机", "随机")]
+        if os.path.exists(json_path):
+            try:
+                with open(json_path, 'r', encoding='utf-8') as f:
+                    data = json.load(f)
+                if isinstance(data, list):
+                    for item in data:
+                        if "title" in item and "content" in item:
+                            presets.append((item["title"], item["content"]))
+            except:
+                pass
+        dropdown_dict = {p[0]: p[1] for p in presets}
+        return {
+            "required": {
+                "预设选择": (list(dropdown_dict.keys()), {"default": "随机"}),
+                "润色模式": ("BOOLEAN", {"default": True, "label": "🎨 智能风格润色"}),
+                "seed": ("INT", {"default": 0, "min": 0, "max": 18446744073709551615}),
+            }
+        }
+
+    RETURN_TYPES = ("STRING",)
+    RETURN_NAMES = ("prompt",)
+    FUNCTION = "load_preset"
+    OUTPUT_NODE = True
+
+    def load_preset(self, 预设选择, 润色模式, seed):
+        random.seed(seed)
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        json_path = os.path.join(current_dir, "fashion_presets.json")
+
+        if not os.path.exists(json_path):
+            return (f"错误：未找到 fashion_presets.json，请将其放在插件目录下。\n路径: {json_path}",)
+
+        try:
+            with open(json_path, 'r', encoding='utf-8') as f:
+                data = json.load(f)
+            if not isinstance(data, list) or len(data) == 0:
+                return ("JSON 格式错误，应为包含对象的数组。",)
+
+            if 预设选择 == "随机":
+                chosen = random.choice(data)
+            else:
+                chosen = next((item for item in data if item.get("title") == 预设选择), None)
+                if chosen is None:
+                    chosen = random.choice(data)
+
+            content = chosen.get("content", "无内容")
+            title = chosen.get("title", "")
+
+            if 润色模式:
+                content = self._polish_prompt(content, title)
+
+            return (content,)
+
+        except Exception as e:
+            return (f"读取 JSON 失败: {str(e)}",)
+
+    def _polish_prompt(self, raw_text, title):
+        text_for_scan = (title + " " + raw_text).lower()
+        matched_styles = []
+        for style in self.STYLE_ENHANCE.keys():
+            if style in text_for_scan:
+                matched_styles.append(style)
+        if matched_styles:
+            enhance_words = self.STYLE_ENHANCE[matched_styles[0]]
+            selected_words = random.sample(enhance_words, min(3, len(enhance_words)))
+        else:
+            selected_words = random.sample(self.DEFAULT_ENHANCE, min(3, len(self.DEFAULT_ENHANCE)))
+        for word in selected_words:
+            if word not in raw_text:
+                if raw_text.endswith(('。', '.', '！', '!')):
+                    raw_text += " " + word + "。"
+                else:
+                    raw_text += "。" + word + "。"
+        if "光线" not in raw_text and "光" not in raw_text:
+            light_options = ["自然柔光", "侧逆光", "伦勃朗光", "轮廓光", "漫射光"]
+            raw_text += "采用" + random.choice(light_options) + "，塑造立体感。"
+        return raw_text
+
+
 NODE_CLASS_MAPPINGS = {
     "ZImagePromptGeneratorNode": ZImagePromptGeneratorNode,
     "ZImagePromptLoaderNode": ZImagePromptLoaderNode,
+    "ZImageFashionPresetLoaderNode": ZImageFashionPresetLoaderNode,
 }
 
 NODE_DISPLAY_NAME_MAPPINGS = {
     "ZImagePromptGeneratorNode": "✨ Z-image-落日-提示词生成器",
     "ZImagePromptLoaderNode": "✨ Z-image-落日-提示词抽取器",
+    "ZImageFashionPresetLoaderNode": "👗 Z-image-落日-穿搭预设选择器",
 }
