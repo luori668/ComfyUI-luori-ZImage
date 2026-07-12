@@ -37,7 +37,8 @@ comfyUI画布内 双击搜索 落日  即可
 3. 搜索 `luori-ZImage` 或 `ComfyUI-luori-ZImage`
 4. 安装后重启 ComfyUI
 
-5.<img width="1434" height="978" alt="1a60ab76-91e8-4e55-a099-32ded32e4581" src="https://github.com/user-attachments/assets/b7dd3b23-f09a-467f-920c-b92c3224e875" />
+5.<img width="1437" height="790" alt="f8914655-2b6d-4060-a933-b828702c6df3" src="https://github.com/user-attachments/assets/a2941b0c-9b04-4b3c-bc8c-83a2be227622" />
+
 
 
 
