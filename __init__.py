@@ -387,6 +387,7 @@ class ZImagePromptLoaderNode:
                 "cos": ("BOOLEAN", {"default": False, "label": "cos"}),
                 "糖水少女": ("BOOLEAN", {"default": False, "label": "糖水少女"}),
                 "NSFW": ("BOOLEAN", {"default": False, "label": "NSFW"}),
+                "超强模式": ("BOOLEAN", {"default": False, "label": "超强模式（专属词库）"}),
                 "抽卡": ("BOOLEAN", {"default": False, "label": "抽卡"}),
                 "随机模式": ("BOOLEAN", {"default": True, "label": "随机模式（忽略开关，从全部抽取）"}),
                 "seed": ("INT", {"default": 0, "min": 0, "max": 0xffffffffffffffff}),
@@ -398,11 +399,30 @@ class ZImagePromptLoaderNode:
     FUNCTION = "load_prompt"
     OUTPUT_NODE = True
 
-    def load_prompt(self, 文件路径, 古装, 古风, 艺术摄影, cos, 糖水少女, NSFW, 抽卡, 随机模式, seed):
+    def load_prompt(self, 文件路径, 古装, 古风, 艺术摄影, cos, 糖水少女, NSFW, 超强模式, 抽卡, 随机模式, seed):
         random.seed(seed)
         current_dir = os.path.dirname(os.path.abspath(__file__))
-        full_path = os.path.join(current_dir, 文件路径)
 
+        # ===== 超强模式：只从 prompt_luori.json 抽取 =====
+        if 超强模式:
+            luori_path = os.path.join(current_dir, "prompt_luori.json")
+            if not os.path.exists(luori_path):
+                return (f"文件不存在！请把 prompt_luori.json 放到插件目录下。\n路径: {luori_path}",)
+            try:
+                with open(luori_path, 'r', encoding='utf-8') as f:
+                    luori_data = json.load(f)
+                luori_prompts = []
+                for lst in luori_data.values():
+                    if isinstance(lst, list):
+                        luori_prompts.extend(lst)
+                if luori_prompts:
+                    return (random.choice(luori_prompts),)
+                return ("prompt_luori.json 中没有可用的提示词",)
+            except Exception as e:
+                return (f"读取 prompt_luori.json 失败: {str(e)}",)
+
+        # ===== 普通模式：从 prompt_library.json 抽取（原逻辑） =====
+        full_path = os.path.join(current_dir, 文件路径)
         if not os.path.exists(full_path):
             return (f"文件不存在！请把 prompt_library.json 放到插件目录下。\n路径: {full_path}",)
 
@@ -435,7 +455,6 @@ class ZImagePromptLoaderNode:
 
         except Exception as e:
             return (f"读取失败: {str(e)}",)
-
 
 class ZImageFashionPresetLoaderNode:
     CATEGORY = "prompt_generators"
