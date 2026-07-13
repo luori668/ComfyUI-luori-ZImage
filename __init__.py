@@ -67,7 +67,7 @@ libraries = {
         "质感": ["皮肤质感细腻", "发丝根根分明", "睫毛清晰可见", "瞳孔有神", "唇部水润", "服装纹理清晰", "材质质感真实", "金属反光", "玻璃通透", "水珠晶莹", "光影过渡自然", "色彩过渡平滑", "层次丰富", "立体感强", "空间感足", "空气感", "呼吸感", "生命力", "情感表达", "故事感"]
     },
     "姿势动作": {
-        "全身姿势": ["慵懒倚靠沙发", "坐在窗边看窗外", "站立靠墙", "躺在地毯上", "蹲在地上", "跳跃瞬间", "旋转跳舞", "漫步行走", "奔跑抓拍", "瑜伽动作", "舞蹈姿势", "运动瞬间", "伸展身体", "蜷缩身体", "俯身低头", "仰头向上", "侧身回眸", "正面直视", "背影", "坐姿优雅", "站姿挺拔", "卧姿放松", "跪姿虔诚", "趴姿慵懒"],
+        "全身姿势": ["慵懒倚靠沙发", "坐在窗边", "站立靠墙", "躺在地毯上", "蹲在地上", "跳跃瞬间", "旋转跳舞", "漫步行走", "奔跑抓拍", "瑜伽动作", "舞蹈姿势", "运动瞬间", "伸展身体", "蜷缩身体", "俯身低头", "仰头向上", "侧身回眸", "正面直视", "背影", "坐姿优雅", "站姿挺拔", "卧姿放松", "跪姿虔诚", "趴姿慵懒"],
         "手部动作": ["轻抚发丝", "双手抱胸", "手插口袋", "双手合十", "比心手势", "比耶手势", "OK手势", "打招呼", "挥手告别", "伸手触摸", "握拳加油", "张开双臂", "交叉双手", "整理衣领", "调整眼镜", "拿书阅读", "端茶杯", "拿手机自拍", "撑伞", "拿包", "拿花束", "拿气球"],
         "面部表情": ["微笑", "大笑", "露齿笑", "抿嘴笑", "神秘微笑", "忧郁", "沉思", "惊讶", "调皮", "温柔", "高冷", "清冷", "甜美", "可爱", "俏皮", "性感", "妩媚", "诱惑", "无辜", "天真", "自信", "坚定", "迷茫", "疲惫", "放松", "专注", "出神", "期待", "满足", "幸福"],
         "眼神": ["直视镜头", "避开视线", "看向远方", "低头看地", "抬头看天", "侧目斜视", "闭眼", "半睁眼", "眯眼", "瞪大眼", "含情脉脉", "眼神凌厉", "眼神温柔", "眼神坚定", "眼神迷茫", "眼神忧郁", "眼神俏皮", "眼神诱惑", "眼神无辜", "眼神自信", "泪眼朦胧", "眼中带笑", "眼神有光", "眼神深邃", "眼神清澈"]
@@ -113,7 +113,6 @@ libraries["NSFW元素"] = {
     "情色氛围": ["极致淫乱", "欲火焚身高潮连连", "肉欲横流春心荡漾", "淫靡湿热", "高潮痉挛潮吹", "色情至极", "情欲爆炸", "极致色气满满", "欲仙欲死", "浪叫连连"]
 }
 
-# ====================== 动作菜单 ======================
 action_options = [
     "无", "侧身回眸", "站立靠墙", "坐在窗边", "慵懒倚靠沙发", "双手抱胸", "轻抚发丝", 
     "手插口袋", "抬头望天", "低头沉思", "跪坐姿势", "M字腿", "双腿大开", "撅起臀部", 
@@ -153,31 +152,32 @@ class ZImagePromptGeneratorNode:
         age_options = ["无"] + [f"{i}岁" for i in range(16, 39)]
         body_options = ["无", "苗条修长", "S型火辣曲线", "丰满坚挺", "纤细腰肢蜜桃臀", "高挑匀称", "肉感丰腴", "骨感模特身材", "舞蹈生紧致身材", "健身型健康曲线"]
 
+        all_headwear = list(set([item for sublist in libraries["头部配饰"].values() for item in sublist]))
+
         return {
             "required": {
-                "风格主题": (list(style_templates.keys()) + ["随机", "无"], {"default": "随机"}),
-                "拍摄风格": (libraries["拍摄主题"]["风格"] + ["随机", "无"], {"default": "随机"}),
-                "拍摄类型": (libraries["拍摄主题"]["类型"] + ["随机", "无"], {"default": "随机"}),
+                "风格主题": (list(style_templates.keys()) + ["随机", "无"], {"default": "高冷御姐"}),
+                "拍摄风格": (libraries["拍摄主题"]["风格"] + ["随机", "无"], {"default": "时尚艺术写真"}),
+                "拍摄类型": (libraries["拍摄主题"]["类型"] + ["随机", "无"], {"default": "小香风"}),
                 "细节级别": (["简洁级", "普通级", "详细级", "大师级", "极致级", "无"], {"default": "大师级"}),
-                # 关键修改：键名改为中文
-                "Krea-2 解限触发词1": ("STRING", {"default": "", "multiline": False}),
+                "lora触发词1": ("STRING", {"default": "", "multiline": False}),
                 "启用1": ("BOOLEAN", {"default": False}),
-                "Krea-2 解限触发词2": ("STRING", {"default": "", "multiline": False}),
+                "lora触发词2": ("STRING", {"default": "", "multiline": False}),
                 "启用2": ("BOOLEAN", {"default": False}),
-                "Krea-2 解限触发词3": ("STRING", {"default": "", "multiline": False}),
+                "lora触发词3": ("STRING", {"default": "", "multiline": False}),
                 "启用3": ("BOOLEAN", {"default": False}),
-                "Krea-2 解限触发词4": ("STRING", {"default": "", "multiline": False}),
+                "lora触发词4": ("STRING", {"default": "", "multiline": False}),
                 "启用4": ("BOOLEAN", {"default": False}),
                 "动作": (action_options, {"default": "无"}),
-                "年龄": (age_options, {"default": "无"}),
-                "身材": (body_options, {"default": "无"}),
+                "年龄": (age_options, {"default": "23岁"}),
+                "身材": (body_options, {"default": "舞蹈生紧致身材"}),
                 "种族选择": (libraries["人种类型"]["人种"] + ["随机", "无"], {"default": "亚洲人"}),
-                "美瞳选择": (libraries["美瞳种类"]["美瞳"] + ["随机"], {"default": "无"}),
+                "美瞳选择": (libraries["美瞳种类"]["美瞳"] + ["随机"], {"default": "蓝灰色"}),
                 "丝袜类型": (libraries["丝袜类型"]["丝袜种类"], {"default": "无"}),
-                "头部配饰": (list(set([item for sublist in libraries["头部配饰"].values() for item in sublist])), {"default": "无"}),
+                "头部配饰": (all_headwear, {"default": "无"}),
                 "鞋子类型": (libraries["鞋子类型"]["鞋类"], {"default": "无"}),
                 "情趣衣服": (libraries["情趣服装"]["情趣衣服"], {"default": "无"}),
-                "景别": (libraries["景别"]["类型"], {"default": "半身照"}),
+                "景别": (libraries["景别"]["类型"], {"default": "全身照"}),
                 "NSFW": ("BOOLEAN", {"default": False, "label": "NSFW（漏骨模式）"}),
                 "包含姿势描述": ("BOOLEAN", {"default": True}),
                 "包含高级细节": ("BOOLEAN", {"default": True}),
@@ -200,22 +200,22 @@ class ZImagePromptGeneratorNode:
         seed = kwargs.get("seed", 0)
         random.seed(seed)
 
-        style_theme = kwargs.get("风格主题", "随机")
-        style = kwargs.get("拍摄风格", "随机")
-        type_val = kwargs.get("拍摄类型", "随机")
+        style_theme = kwargs.get("风格主题", "高冷御姐")
+        style = kwargs.get("拍摄风格", "时尚艺术写真")
+        type_val = kwargs.get("拍摄类型", "小香风")
         detail_level = kwargs.get("细节级别", "大师级")
         action = kwargs.get("动作", "无")
-        selected_age = kwargs.get("年龄", "无")
-        selected_body = kwargs.get("身材", "无")
+        selected_age = kwargs.get("年龄", "23岁")
+        selected_body = kwargs.get("身材", "舞蹈生紧致身材")
         nsfw = kwargs.get("NSFW", False)
 
         race_choice = kwargs.get("种族选择", "亚洲人")
-        contact_lens_choice = kwargs.get("美瞳选择", "无")
+        contact_lens_choice = kwargs.get("美瞳选择", "蓝灰色")
         stocking = kwargs.get("丝袜类型", "无")
         headwear = kwargs.get("头部配饰", "无")
         shoes = kwargs.get("鞋子类型", "无")
         sexy_clothing = kwargs.get("情趣衣服", "无")
-        framing = kwargs.get("景别", "半身照")
+        framing = kwargs.get("景别", "全身照")
 
         include_pose = kwargs.get("包含姿势描述", True)
         include_details = kwargs.get("包含高级细节", True)
@@ -224,8 +224,8 @@ class ZImagePromptGeneratorNode:
         enable_foreground = kwargs.get("启用前景特效", False)
 
         triggers = []
-        for i in range(1, 5):
-            trigger = kwargs.get(f"Krea-2 解限触发词{i}", "").strip()
+        for i in range(1, 4):
+            trigger = kwargs.get(f"lora触发词填充{i}", "").strip()
             enabled = kwargs.get(f"启用{i}", False)
             if trigger and enabled:
                 triggers.append(trigger)
@@ -270,7 +270,7 @@ class ZImagePromptGeneratorNode:
                          contact_lens_choice, stocking, headwear, shoes,
                          sexy_clothing, framing, include_pose, include_details,
                          include_quality, include_suffix, enable_foreground,
-                         coherent, nsfw=False, selected_age="无", selected_body="无"):
+                         coherent, nsfw=False, selected_age="23岁", selected_body="舞蹈生紧致身材"):
 
         nsfw_body = random.choice(libraries["NSFW元素"]["身体强调"]) + "，" if nsfw else ""
 
@@ -373,7 +373,6 @@ class ZImagePromptGeneratorNode:
 
 
 class ZImagePromptLoaderNode:
-    """Z-image-落日-提示词抽取器"""
     CATEGORY = "prompt_generators"
 
     @classmethod
@@ -381,15 +380,15 @@ class ZImagePromptLoaderNode:
         return {
             "required": {
                 "文件路径": ("STRING", {"default": "prompt_library.json", "multiline": False}),
+                "超强模式": ("BOOLEAN", {"default": True, "label": "超强模式（专属词库）"}),
                 "古装": ("BOOLEAN", {"default": False, "label": "古装"}),
                 "古风": ("BOOLEAN", {"default": False, "label": "古风"}),
                 "艺术摄影": ("BOOLEAN", {"default": False, "label": "艺术摄影"}),
                 "cos": ("BOOLEAN", {"default": False, "label": "cos"}),
                 "糖水少女": ("BOOLEAN", {"default": False, "label": "糖水少女"}),
                 "NSFW": ("BOOLEAN", {"default": False, "label": "NSFW"}),
-                "超强模式": ("BOOLEAN", {"default": False, "label": "超强模式（专属词库）"}),
                 "抽卡": ("BOOLEAN", {"default": False, "label": "抽卡"}),
-                "随机模式": ("BOOLEAN", {"default": True, "label": "随机模式（忽略开关，从全部抽取）"}),
+                "随机模式": ("BOOLEAN", {"default": False, "label": "随机模式（忽略开关，从全部抽取）"}),
                 "seed": ("INT", {"default": 0, "min": 0, "max": 0xffffffffffffffff}),
             }
         }
@@ -399,11 +398,10 @@ class ZImagePromptLoaderNode:
     FUNCTION = "load_prompt"
     OUTPUT_NODE = True
 
-    def load_prompt(self, 文件路径, 古装, 古风, 艺术摄影, cos, 糖水少女, NSFW, 超强模式, 抽卡, 随机模式, seed):
+    def load_prompt(self, 文件路径, 超强模式, 古装, 古风, 艺术摄影, cos, 糖水少女, NSFW, 抽卡, 随机模式, seed):
         random.seed(seed)
         current_dir = os.path.dirname(os.path.abspath(__file__))
 
-        # ===== 超强模式：只从 prompt_luori.json 抽取 =====
         if 超强模式:
             luori_path = os.path.join(current_dir, "prompt_luori.json")
             if not os.path.exists(luori_path):
@@ -421,7 +419,6 @@ class ZImagePromptLoaderNode:
             except Exception as e:
                 return (f"读取 prompt_luori.json 失败: {str(e)}",)
 
-        # ===== 普通模式：从 prompt_library.json 抽取（原逻辑） =====
         full_path = os.path.join(current_dir, 文件路径)
         if not os.path.exists(full_path):
             return (f"文件不存在！请把 prompt_library.json 放到插件目录下。\n路径: {full_path}",)
@@ -503,7 +500,7 @@ class ZImageFashionPresetLoaderNode:
         return {
             "required": {
                 "预设选择": (list(dropdown_dict.keys()), {"default": "随机"}),
-                "润色模式": ("BOOLEAN", {"default": True, "label": "🎨 智能风格润色"}),
+                "润色模式": ("BOOLEAN", {"default": True, "label": "智能风格润色"}),
                 "seed": ("INT", {"default": 0, "min": 0, "max": 18446744073709551615}),
             }
         }
