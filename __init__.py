@@ -160,14 +160,9 @@ class ZImagePromptGeneratorNode:
                 "拍摄风格": (libraries["拍摄主题"]["风格"] + ["随机", "无"], {"default": "时尚艺术写真"}),
                 "拍摄类型": (libraries["拍摄主题"]["类型"] + ["随机", "无"], {"default": "小香风"}),
                 "细节级别": (["简洁级", "普通级", "详细级", "大师级", "极致级", "无"], {"default": "大师级"}),
-                "lora触发词1": ("STRING", {"default": "", "multiline": False}),
-                "启用1": ("BOOLEAN", {"default": False}),
-                "lora触发词2": ("STRING", {"default": "", "multiline": False}),
-                "启用2": ("BOOLEAN", {"default": False}),
-                "lora触发词3": ("STRING", {"default": "", "multiline": False}),
-                "启用3": ("BOOLEAN", {"default": False}),
-                "lora触发词4": ("STRING", {"default": "", "multiline": False}),
-                "启用4": ("BOOLEAN", {"default": False}),
+                # 触发词开关与内容（开关在上，文本在下）
+                "触发词开关": ("BOOLEAN", {"default": False}),
+                "触发词内容": ("STRING", {"default": "", "multiline": True}),
                 "动作": (action_options, {"default": "无"}),
                 "年龄": (age_options, {"default": "23岁"}),
                 "身材": (body_options, {"default": "舞蹈生紧致身材"}),
@@ -223,12 +218,9 @@ class ZImagePromptGeneratorNode:
         include_suffix = kwargs.get("包含后缀参数", True)
         enable_foreground = kwargs.get("启用前景特效", False)
 
-        triggers = []
-        for i in range(1, 4):
-            trigger = kwargs.get(f"lora触发词填充{i}", "").strip()
-            enabled = kwargs.get(f"启用{i}", False)
-            if trigger and enabled:
-                triggers.append(trigger)
+        # 获取触发词
+        trigger_enabled = kwargs.get("触发词开关", False)
+        trigger_text = kwargs.get("触发词内容", "").strip()
 
         def resolve(value, category, subcategory):
             if value == "随机":
@@ -259,10 +251,9 @@ class ZImagePromptGeneratorNode:
         if prompt_input:
             prompt = prompt_input + "\n" + prompt
 
-        if triggers:
-            trigger_str = ", ".join(triggers)
-            if trigger_str not in prompt:
-                prompt = trigger_str + " " + prompt
+        # 把触发词放到最前面（先于 prompt_input 和生成的 prompt）
+        if trigger_enabled and trigger_text:
+            prompt = trigger_text + " " + prompt
 
         return (prompt,)
 
@@ -390,6 +381,9 @@ class ZImagePromptLoaderNode:
                 "抽卡": ("BOOLEAN", {"default": False, "label": "抽卡"}),
                 "随机模式": ("BOOLEAN", {"default": False, "label": "随机模式（忽略开关，从全部抽取）"}),
                 "seed": ("INT", {"default": 0, "min": 0, "max": 0xffffffffffffffff}),
+                # 触发词开关与内容
+                "触发词开关": ("BOOLEAN", {"default": False}),
+                "触发词内容": ("STRING", {"default": "", "multiline": True}),
             }
         }
 
@@ -398,14 +392,20 @@ class ZImagePromptLoaderNode:
     FUNCTION = "load_prompt"
     OUTPUT_NODE = True
 
-    def load_prompt(self, 文件路径, 超强模式, 古装, 古风, 艺术摄影, cos, 糖水少女, NSFW, 抽卡, 随机模式, seed):
+    def load_prompt(self, 文件路径, 超强模式, 古装, 古风, 艺术摄影, cos, 糖水少女, NSFW, 抽卡, 随机模式, seed, 触发词开关=False, 触发词内容=""):
         random.seed(seed)
         current_dir = os.path.dirname(os.path.abspath(__file__))
+
+        trigger_enabled = 触发词开关
+        trigger_text = 触发词内容.strip()
 
         if 超强模式:
             luori_path = os.path.join(current_dir, "prompt_luori.json")
             if not os.path.exists(luori_path):
-                return (f"文件不存在！请把 prompt_luori.json 放到插件目录下。\n路径: {luori_path}",)
+                result = f"文件不存在！请把 prompt_luori.json 放到插件目录下。\n路径: {luori_path}"
+                if trigger_enabled and trigger_text:
+                    result = trigger_text + " " + result
+                return (result,)
             try:
                 with open(luori_path, 'r', encoding='utf-8') as f:
                     luori_data = json.load(f)
@@ -414,14 +414,26 @@ class ZImagePromptLoaderNode:
                     if isinstance(lst, list):
                         luori_prompts.extend(lst)
                 if luori_prompts:
-                    return (random.choice(luori_prompts),)
-                return ("prompt_luori.json 中没有可用的提示词",)
+                    result = random.choice(luori_prompts)
+                    if trigger_enabled and trigger_text:
+                        result = trigger_text + " " + result
+                    return (result,)
+                result = "prompt_luori.json 中没有可用的提示词"
+                if trigger_enabled and trigger_text:
+                    result = trigger_text + " " + result
+                return (result,)
             except Exception as e:
-                return (f"读取 prompt_luori.json 失败: {str(e)}",)
+                result = f"读取 prompt_luori.json 失败: {str(e)}"
+                if trigger_enabled and trigger_text:
+                    result = trigger_text + " " + result
+                return (result,)
 
         full_path = os.path.join(current_dir, 文件路径)
         if not os.path.exists(full_path):
-            return (f"文件不存在！请把 prompt_library.json 放到插件目录下。\n路径: {full_path}",)
+            result = f"文件不存在！请把 prompt_library.json 放到插件目录下。\n路径: {full_path}"
+            if trigger_enabled and trigger_text:
+                result = trigger_text + " " + result
+            return (result,)
 
         try:
             with open(full_path, 'r', encoding='utf-8') as f:
@@ -433,8 +445,14 @@ class ZImagePromptLoaderNode:
                     if isinstance(lst, list):
                         all_prompts.extend(lst)
                 if all_prompts:
-                    return (random.choice(all_prompts),)
-                return ("JSON中没有提示词",)
+                    result = random.choice(all_prompts)
+                    if trigger_enabled and trigger_text:
+                        result = trigger_text + " " + result
+                    return (result,)
+                result = "JSON中没有提示词"
+                if trigger_enabled and trigger_text:
+                    result = trigger_text + " " + result
+                return (result,)
 
             selected = []
             if 古装 and "古装" in data: selected.extend(data["古装"])
@@ -446,12 +464,22 @@ class ZImagePromptLoaderNode:
             if 抽卡 and "抽卡" in data: selected.extend(data["抽卡"])
 
             if selected:
-                return (random.choice(selected),)
+                result = random.choice(selected)
+                if trigger_enabled and trigger_text:
+                    result = trigger_text + " " + result
+                return (result,)
             else:
-                return ("请至少开启一个分类开关，或打开随机模式",)
+                result = "请至少开启一个分类开关，或打开随机模式"
+                if trigger_enabled and trigger_text:
+                    result = trigger_text + " " + result
+                return (result,)
 
         except Exception as e:
-            return (f"读取失败: {str(e)}",)
+            result = f"读取失败: {str(e)}"
+            if trigger_enabled and trigger_text:
+                result = trigger_text + " " + result
+            return (result,)
+
 
 class ZImageFashionPresetLoaderNode:
     CATEGORY = "prompt_generators"
