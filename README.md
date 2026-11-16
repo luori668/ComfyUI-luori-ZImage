@@ -1,5 +1,16 @@
 # ComfyUI-luori-ZImage
 
+## 许可证与版权
+
+本仓库自 **2026-11-17** 起采用 **GPL-3.0-or-later**，并适用 `NOTICE`
+中依 GPL 第 7 条 (b)(c)(d) 附加的署名保留、来源标注与禁止冒名条款。
+
+本仓库全部材料（含 `prompt_luori.json`、`prompt_library.json`、`fashion_presets.json`、`Z-image示例工作流.json`、源码与文档）
+均为 **luori668 私人所有**，不存在其他第三方素材来源或共同权利人。
+再分发时须随附 `LICENSE` 与 `NOTICE`，保留作者署名，
+并显著标注修改与日期。
+
+
 一个专为 **Z-Image**（造相 / Z-Image Turbo）模型优化的 ComfyUI 自定义节点插件。
 
 让 Z-Image 在 ComfyUI 中使用更方便、更强大，支持更好的提示词处理。
@@ -47,6 +58,6 @@ comfyUI画布内 双击搜索 落日  即可
 ### 方法二：手动安装
 ```bash
 cd ComfyUI/custom_nodes
-git clone https://github.com/piaoling44/ComfyUI-luori-ZImage.git
+git clone https://github.com/luori668/ComfyUI-luori-ZImage.git
 cd ComfyUI-luori-ZImage
 pip install -r requirements.txt
